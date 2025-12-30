@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZT Hosting AI Assistant</title>
+    <style>
+        /* Chat Button */
+        .chat-btn {
+            position: fixed; bottom: 20px; right: 20px;
+            background: #007bff; color: white; border: none;
+            width: 60px; height: 60px; border-radius: 50%;
+            cursor: pointer; font-size: 24px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.2s;
+        }
+        .chat-btn:hover { transform: scale(1.1); }
+
+        /* Chat Window */
+        .chat-window {
+            position: fixed; bottom: 90px; right: 20px;
+            width: 350px; height: 500px; background: white;
+            border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+            display: none; flex-direction: column; overflow: hidden;
+            z-index: 1000; border: 1px solid #ddd;
+        }
+
+        .chat-header { 
+            background: #007bff; color: white; padding: 15px; 
+            font-weight: bold; font-family: sans-serif;
+            display: flex; justify-content: space-between;
+        }
+        
+        #chat-box { 
+            flex: 1; padding: 15px; overflow-y: auto; 
+            font-size: 14px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        .message { margin-bottom: 12px; line-height: 1.4; }
+        .user-msg { color: #333; text-align: right; }
+        .bot-msg { color: #007bff; text-align: left; }
+
+        .input-area { display: flex; padding: 10px; border-top: 1px solid #eee; background: white; }
+        input { 
+            flex: 1; padding: 10px; border: 1px solid #ddd; 
+            border-radius: 20px; outline: none; padding-left: 15px;
+        }
+        button#send-btn { 
+            background: #007bff; color: white; border: none; 
+            padding: 8px 18px; margin-left: 8px; border-radius: 20px; 
+            cursor: pointer; font-weight: bold;
+        }
+        button#send-btn:hover { background: #0056b3; }
+
+        .typing { color: gray; font-style: italic; font-size: 12px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <button class="chat-btn" onclick="toggleChat()">💬</button>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <span>ZT Hosting AI Support</span>
+            <span style="cursor:pointer" onclick="toggleChat()">✖</span>
+        </div>
+        <div id="chat-box">
+            <div class="message bot-msg"><b>Bot:</b> Hello! How can I help you with ZT Hosting today?</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Ask me something..." onkeypress="handleEnter(event)">
+            <button id="send-btn" onclick="sendMsg()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleChat() {
+            const win = document.getElementById('chatWindow');
+            win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function handleEnter(event) {
+            if (event.key === "Enter") {
+                sendMsg();
+            }
+        }
+
+        function sendMsg() {
+            const input = document.getElementById('userInput');
+            const box = document.getElementById('chat-box');
+            if(!input.value.trim()) return;
+
+            const userText = input.value;
+            // Add User Message
+            box.innerHTML += `<div class="message user-msg"><b>You:</b> ${userText}</div>`;
+            input.value = '';
+
+            // Add Loading Indicator
+            const loadingId = "load-" + Date.now();
+            box.innerHTML += `<div id="${loadingId}" class="typing">AI is thinking...</div>`;
+            box.scrollTop = box.scrollHeight;
+
+            // URL Logic: Local vs Production
+            // Agar aap localhost par hain to port 8000 use hoga, warna live endpoint
+            const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+            const apiEndpoint = isLocal ? 'http://127.0.0.1:8000/ask' : '/ask';
+
+            fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: userText})
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('API Response Error');
+                return res.json();
+            })
+            .then(data => {
+                document.getElementById(loadingId).remove();
+                box.innerHTML += `<div class="message bot-msg"><b>Bot:</b> ${data.answer}</div>`;
+                box.scrollTop = box.scrollHeight;
+            })
+            .catch(err => {
+                if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
+                box.innerHTML += `<div style="color:red; font-size:12px;">Error: Could not connect to AI.</div>`;
+                console.error('Error:', err);
+            });
+        }
+    </script>
+</body>
+</html>

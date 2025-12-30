@@ -840,94 +840,94 @@
 
 
 
-# # import os
-# # from fastapi import FastAPI, Request
-# # from fastapi.middleware.cors import CORSMiddleware
-# # from fastapi.responses import HTMLResponse
-# # from dotenv import load_dotenv
-# # from langchain_groq import ChatGroq
-# # from langchain_core.prompts import ChatPromptTemplate
+import os
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from dotenv import load_dotenv
+from langchain_groq import ChatGroq
+from langchain_core.prompts import ChatPromptTemplate
 
-# # load_dotenv()
-# # app = FastAPI()
+load_dotenv()
+app = FastAPI()
 
-# # app.add_middleware(
-# #     CORSMiddleware,
-# #     allow_origins=["*"],
-# #     allow_credentials=True,
-# #     allow_methods=["*"],
-# #     allow_headers=["*"],
-# # )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# # # --- Path Settings ---
-# # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# # DATA_PATH = os.path.join(BASE_DIR, "data", "zt_data.txt")
-# # HTML_PATH = os.path.join(BASE_DIR, "templates", "index.html")
+# --- Path Settings ---
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_PATH = os.path.join(BASE_DIR, "data", "zt_data.txt")
+HTML_PATH = os.path.join(BASE_DIR, "templates", "index.html")
 
-# # # --- UI Route ---
-# # @app.get("/", response_class=HTMLResponse)
-# # async def get_home():
-# #     try:
-# #         if os.path.exists(HTML_PATH):
-# #             with open(HTML_PATH, "r", encoding="utf-8") as f:
-# #                 return f.read()
-# #         return "<h1>Error: templates/index.html not found!</h1>"
-# #     except Exception as e:
-# #         return f"<h1>Internal Error: {str(e)}</h1>"
+# --- UI Route ---
+@app.get("/", response_class=HTMLResponse)
+async def get_home():
+    try:
+        if os.path.exists(HTML_PATH):
+            with open(HTML_PATH, "r", encoding="utf-8") as f:
+                return f.read()
+        return "<h1>Error: templates/index.html not found!</h1>"
+    except Exception as e:
+        return f"<h1>Internal Error: {str(e)}</h1>"
 
-# # # --- AI Logic & Professional Prompting ---
-# # def get_context():
-# #     if os.path.exists(DATA_PATH):
-# #         with open(DATA_PATH, "r", encoding="utf-8") as f:
-# #             # Context window limit to avoid token overflow
-# #             return f.read()[:8000]
-# #     return "No hosting info available."
+# --- AI Logic & Professional Prompting ---
+def get_context():
+    if os.path.exists(DATA_PATH):
+        with open(DATA_PATH, "r", encoding="utf-8") as f:
+            # Context window limit to avoid token overflow
+            return f.read()[:8000]
+    return "No hosting info available."
 
-# # # Low temperature (0.1) keeps the bot factual and avoids 'hallucinations'
-# # llm = ChatGroq(
-# #     groq_api_key=os.getenv("GROQ_API_KEY"), 
-# #     model_name="llama-3.3-70b-versatile", 
-# #     temperature=0.1 
-# # )
+# Low temperature (0.1) keeps the bot factual and avoids 'hallucinations'
+llm = ChatGroq(
+    groq_api_key=os.getenv("GROQ_API_KEY"), 
+    model_name="llama-3.3-70b-versatile", 
+    temperature=0.1 
+)
 
-# # # Professional & Structured Prompt
-# # prompt = ChatPromptTemplate.from_template("""
-# # You are the Official ZT Hosting Support AI. Your goal is to provide concise, professional, and structured information.
+# Professional & Structured Prompt
+prompt = ChatPromptTemplate.from_template("""
+You are the Official ZT Hosting Support AI. Your goal is to provide concise, professional, and structured information.
 
-# # STRICT GUIDELINES:
-# # 1. ONLY use information from the provided context. If not found, say you don't know politely.
-# # 2. BE CONCISE: Answer directly. No "Hello", "I hope you're well", or long intros. 
-# # 3. FORMATTING: Use **bold** for prices and plan names. Use bullet points for features.
-# # 4. STRUCTURE: Responses must be highly organized. Use tables for plan comparisons.
-# # 5. NO EXTRA INFO: Do not suggest other plans unless requested.
-# # 6. LANGUAGE: If the question is in Roman Urdu, respond in Roman Urdu with this same professional structure.
+STRICT GUIDELINES:
+1. ONLY use information from the provided context. If not found, say you don't know politely.
+2. BE CONCISE: Answer directly. No "Hello", "I hope you're well", or long intros. 
+3. FORMATTING: Use **bold** for prices and plan names. Use bullet points for features.
+4. STRUCTURE: Responses must be highly organized. Use tables for plan comparisons.
+5. NO EXTRA INFO: Do not suggest other plans unless requested.
+6. LANGUAGE: If the question is in Roman Urdu, respond in Roman Urdu with this same professional structure.
 
-# # Context:
-# # {context}
+Context:
+{context}
 
-# # User Question: {input}
-# # Answer:""")
+User Question: {input}
+Answer:""")
 
-# # # --- Chat API Route ---
-# # @app.post("/ask")
-# # async def ask_bot(request: Request):
-# #     try:
-# #         data = await request.json()
-# #         user_input = data.get("message")
+# --- Chat API Route ---
+@app.post("/ask")
+async def ask_bot(request: Request):
+    try:
+        data = await request.json()
+        user_input = data.get("message")
         
-# #         if not user_input:
-# #             return {"answer": "Please provide a message."}
+        if not user_input:
+            return {"answer": "Please provide a message."}
 
-# #         context = get_context()
+        context = get_context()
         
-# #         # Generating structured response
-# #         full_prompt = prompt.format(context=context, input=user_input)
-# #         response = llm.invoke(full_prompt)
+        # Generating structured response
+        full_prompt = prompt.format(context=context, input=user_input)
+        response = llm.invoke(full_prompt)
         
-# #         return {"answer": response.content}
+        return {"answer": response.content}
     
-# #     except Exception as e:
-# #         return {"answer": f"System Error: {str(e)}"}
+    except Exception as e:
+        return {"answer": f"System Error: {str(e)}"}
 
 
 
@@ -1054,107 +1054,107 @@
 
 # add safety check for not crashing the chatbot
 
-import os
-import requests
-from fastapi import FastAPI, Request, Depends, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from dotenv import load_dotenv
-from langchain_groq import ChatGroq
-from langchain_core.prompts import ChatPromptTemplate
-from supabase import create_client
+# import os
+# import requests
+# from fastapi import FastAPI, Request, Depends, HTTPException
+# from fastapi.middleware.cors import CORSMiddleware
+# from fastapi.responses import HTMLResponse
+# from fastapi.security import HTTPBasic, HTTPBasicCredentials
+# from dotenv import load_dotenv
+# from langchain_groq import ChatGroq
+# from langchain_core.prompts import ChatPromptTemplate
+# from supabase import create_client
 
-load_dotenv()
-app = FastAPI()
-security = HTTPBasic()
+# load_dotenv()
+# app = FastAPI()
+# security = HTTPBasic()
 
-# --- Security: Admin Authentication ---
-def authenticate(credentials: HTTPBasicCredentials = Depends(security)):
-    if credentials.username != "admin" or credentials.password != "eagale123":
-        raise HTTPException(status_code=401, detail="Invalid Credentials")
-    return credentials.username
+# # --- Security: Admin Authentication ---
+# def authenticate(credentials: HTTPBasicCredentials = Depends(security)):
+#     if credentials.username != "admin" or credentials.password != "eagale123":
+#         raise HTTPException(status_code=401, detail="Invalid Credentials")
+#     return credentials.username
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=["*"],
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
-# Initialize Supabase Safely
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY) if SUPABASE_URL and SUPABASE_KEY else None
+# # Initialize Supabase Safely
+# SUPABASE_URL = os.getenv("SUPABASE_URL")
+# SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+# supabase = create_client(SUPABASE_URL, SUPABASE_KEY) if SUPABASE_URL and SUPABASE_KEY else None
 
-# Path Settings
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HTML_PATH = os.path.join(BASE_DIR, "templates", "index.html")
-ADMIN_HTML_PATH = os.path.join(BASE_DIR, "templates", "admin.html")
-DATA_PATH = os.path.join(BASE_DIR, "data", "zt_data.txt")
+# # Path Settings
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# HTML_PATH = os.path.join(BASE_DIR, "templates", "index.html")
+# ADMIN_HTML_PATH = os.path.join(BASE_DIR, "templates", "admin.html")
+# DATA_PATH = os.path.join(BASE_DIR, "data", "zt_data.txt")
 
-def get_embedding(text):
-    try:
-        api_url = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2"
-        headers = {"Authorization": f"Bearer {os.getenv('HF_TOKEN')}"}
-        response = requests.post(api_url, headers=headers, json={"inputs": text}, timeout=10)
-        res_data = response.json()
-        if isinstance(res_data, list):
-            return res_data
-        return [0] * 384 # Fallback vector if HF fails
-    except:
-        return [0] * 384
+# def get_embedding(text):
+#     try:
+#         api_url = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2"
+#         headers = {"Authorization": f"Bearer {os.getenv('HF_TOKEN')}"}
+#         response = requests.post(api_url, headers=headers, json={"inputs": text}, timeout=10)
+#         res_data = response.json()
+#         if isinstance(res_data, list):
+#             return res_data
+#         return [0] * 384 # Fallback vector if HF fails
+#     except:
+#         return [0] * 384
 
-@app.get("/", response_class=HTMLResponse)
-async def get_home():
-    if os.path.exists(HTML_PATH):
-        with open(HTML_PATH, "r", encoding="utf-8") as f:
-            return f.read()
-    return "<h1>Templates folder not found!</h1>"
+# @app.get("/", response_class=HTMLResponse)
+# async def get_home():
+#     if os.path.exists(HTML_PATH):
+#         with open(HTML_PATH, "r", encoding="utf-8") as f:
+#             return f.read()
+#     return "<h1>Templates folder not found!</h1>"
 
-@app.get("/eagale-admin-secret", response_class=HTMLResponse)
-async def get_admin(username: str = Depends(authenticate)):
-    if os.path.exists(ADMIN_HTML_PATH):
-        with open(ADMIN_HTML_PATH, "r", encoding="utf-8") as f:
-            return f.read()
-    return "<h1>Admin Template not found!</h1>"
+# @app.get("/eagale-admin-secret", response_class=HTMLResponse)
+# async def get_admin(username: str = Depends(authenticate)):
+#     if os.path.exists(ADMIN_HTML_PATH):
+#         with open(ADMIN_HTML_PATH, "r", encoding="utf-8") as f:
+#             return f.read()
+#     return "<h1>Admin Template not found!</h1>"
 
-@app.post("/admin/add-to-db")
-async def save_to_db(request: Request, username: str = Depends(authenticate)):
-    data = await request.json()
-    q, a = data.get("question"), data.get("answer")
-    vector = get_embedding(q)
-    if supabase:
-        supabase.table("bot_knowledge").insert({"question": q, "answer": a, "embedding": vector}).execute()
-    return {"message": "Database updated."}
+# @app.post("/admin/add-to-db")
+# async def save_to_db(request: Request, username: str = Depends(authenticate)):
+#     data = await request.json()
+#     q, a = data.get("question"), data.get("answer")
+#     vector = get_embedding(q)
+#     if supabase:
+#         supabase.table("bot_knowledge").insert({"question": q, "answer": a, "embedding": vector}).execute()
+#     return {"message": "Database updated."}
 
-@app.post("/ask")
-async def ask_bot(request: Request):
-    try:
-        data = await request.json()
-        user_input = data.get("message")
+# @app.post("/ask")
+# async def ask_bot(request: Request):
+#     try:
+#         data = await request.json()
+#         user_input = data.get("message")
         
-        # Semantic Search with Supabase
-        if supabase:
-            query_vector = get_embedding(user_input)
-            rpc_res = supabase.rpc("match_knowledge", {
-                "query_embedding": query_vector,
-                "match_threshold": 0.8,
-                "match_count": 1
-            }).execute()
-            if rpc_res.data:
-                return {"answer": rpc_res.data[0]['answer']}
+#         # Semantic Search with Supabase
+#         if supabase:
+#             query_vector = get_embedding(user_input)
+#             rpc_res = supabase.rpc("match_knowledge", {
+#                 "query_embedding": query_vector,
+#                 "match_threshold": 0.8,
+#                 "match_count": 1
+#             }).execute()
+#             if rpc_res.data:
+#                 return {"answer": rpc_res.data[0]['answer']}
 
-        # Fallback to Text File
-        context = ""
-        if os.path.exists(DATA_PATH):
-            with open(DATA_PATH, "r", encoding="utf-8") as f:
-                context = f.read()[:8000]
+#         # Fallback to Text File
+#         context = ""
+#         if os.path.exists(DATA_PATH):
+#             with open(DATA_PATH, "r", encoding="utf-8") as f:
+#                 context = f.read()[:8000]
 
-        llm = ChatGroq(groq_api_key=os.getenv("GROQ_API_KEY"), model_name="llama-3.3-70b-versatile", temperature=0.1)
-        prompt = ChatPromptTemplate.from_template("Context: {context}\n\nUser: {input}\nAnswer:")
-        response = llm.invoke(prompt.format(context=context, input=user_input))
-        return {"answer": response.content}
-    except Exception as e:
-        return {"answer": f"Error: {str(e)}"}
+#         llm = ChatGroq(groq_api_key=os.getenv("GROQ_API_KEY"), model_name="llama-3.3-70b-versatile", temperature=0.1)
+#         prompt = ChatPromptTemplate.from_template("Context: {context}\n\nUser: {input}\nAnswer:")
+#         response = llm.invoke(prompt.format(context=context, input=user_input))
+#         return {"answer": response.content}
+#     except Exception as e:
+#         return {"answer": f"Error: {str(e)}"}

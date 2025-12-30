@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -124,6 +124,145 @@
                 if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
                 box.innerHTML += `<div style="color:red; font-size:12px;">Error: Could not connect to AI.</div>`;
                 console.error('Error:', err);
+            });
+        }
+    </script>
+</body>
+</html> -->
+
+
+<!-- Aapki index.html file bilkul theek hai, lekin is mein Markdown support missing hai, jis ki wajah se bot ke bheje gaye stars (**) aur bullet points (*) sahi tarah format nahi ho rahay. -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZT Hosting AI Assistant</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        /* Chat Button */
+        .chat-btn {
+            position: fixed; bottom: 20px; right: 20px;
+            background: #007bff; color: white; border: none;
+            width: 60px; height: 60px; border-radius: 50%;
+            cursor: pointer; font-size: 24px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 1000; transition: transform 0.2s;
+        }
+        .chat-btn:hover { transform: scale(1.1); }
+
+        /* Chat Window */
+        .chat-window {
+            position: fixed; bottom: 90px; right: 20px;
+            width: 380px; height: 550px; background: white;
+            border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+            display: none; flex-direction: column; overflow: hidden;
+            z-index: 1000; border: 1px solid #ddd;
+        }
+
+        .chat-header { 
+            background: #007bff; color: white; padding: 15px; 
+            font-weight: bold; font-family: sans-serif;
+            display: flex; justify-content: space-between;
+        }
+        
+        #chat-box { 
+            flex: 1; padding: 15px; overflow-y: auto; 
+            font-size: 14px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9; scroll-behavior: smooth;
+        }
+
+        .message { margin-bottom: 15px; line-height: 1.5; padding: 10px; border-radius: 8px; }
+        .user-msg { background: #e9f5ff; color: #333; text-align: right; margin-left: 40px; }
+        .bot-msg { background: #ffffff; color: #333; text-align: left; border: 1px solid #eee; margin-right: 40px; }
+        
+        /* Markdown Specific Styling */
+        .bot-msg p { margin: 5px 0; }
+        .bot-msg ul { padding-left: 20px; margin: 5px 0; }
+        .bot-msg table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 12px; }
+        .bot-msg th, .bot-msg td { border: 1px solid #ddd; padding: 6px; text-align: left; }
+        .bot-msg th { background-color: #f2f2f2; }
+
+        .input-area { display: flex; padding: 10px; border-top: 1px solid #eee; background: white; }
+        input { 
+            flex: 1; padding: 10px; border: 1px solid #ddd; 
+            border-radius: 20px; outline: none; padding-left: 15px;
+        }
+        button#send-btn { 
+            background: #007bff; color: white; border: none; 
+            padding: 8px 18px; margin-left: 8px; border-radius: 20px; 
+            cursor: pointer; font-weight: bold;
+        }
+        .typing { color: gray; font-style: italic; font-size: 12px; margin-bottom: 10px; padding-left: 15px; }
+    </style>
+</head>
+<body>
+
+    <button class="chat-btn" onclick="toggleChat()">💬</button>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <span>ZT Hosting AI Support</span>
+            <span style="cursor:pointer" onclick="toggleChat()">✖</span>
+        </div>
+        <div id="chat-box">
+            <div class="message bot-msg"><b>Bot:</b> Hello! How can I help you with ZT Hosting today?</div>
+        </div>
+        <div id="loading" class="typing" style="display:none;">AI is thinking...</div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Ask me something..." onkeypress="handleEnter(event)">
+            <button id="send-btn" onclick="sendMsg()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleChat() {
+            const win = document.getElementById('chatWindow');
+            win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function handleEnter(event) {
+            if (event.key === "Enter") { sendMsg(); }
+        }
+
+        function sendMsg() {
+            const input = document.getElementById('userInput');
+            const box = document.getElementById('chat-box');
+            const loading = document.getElementById('loading');
+            
+            if(!input.value.trim()) return;
+
+            const userText = input.value;
+            // Add User Message
+            box.innerHTML += `<div class="message user-msg"><b>You:</b> ${userText}</div>`;
+            input.value = '';
+            
+            loading.style.display = 'block';
+            box.scrollTop = box.scrollHeight;
+
+            const apiEndpoint = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
+                ? 'http://127.0.0.1:8000/ask' 
+                : '/ask';
+
+            fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: userText})
+            })
+            .then(res => res.json())
+            .then(data => {
+                loading.style.display = 'none';
+                
+                // Professional Formatting using Marked.js
+                const formattedAnswer = marked.parse(data.answer);
+                
+                box.innerHTML += `<div class="message bot-msg"><b>Bot:</b> ${formattedAnswer}</div>`;
+                box.scrollTop = box.scrollHeight;
+            })
+            .catch(err => {
+                loading.style.display = 'none';
+                box.innerHTML += `<div style="color:red; font-size:12px;">Error: Connection lost.</div>`;
             });
         }
     </script>

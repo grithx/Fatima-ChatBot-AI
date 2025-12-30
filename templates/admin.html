@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Eagale Admin Panel</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 50px; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); width: 100%; max-width: 500px; }
+        h2 { color: #1a73e8; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; background: #1a73e8; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        button:hover { background: #1557b0; }
+        #status { text-align: center; margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Bot Training Center</h2>
+        <label>Question:</label>
+        <input type="text" id="q" placeholder="e.g. What is your contact number?">
+        
+        <label>Answer:</label>
+        <textarea id="a" rows="4" placeholder="e.g. You can call us at +92..."></textarea>
+        
+        <button onclick="trainBot()">Update Memory</button>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        async function trainBot() {
+            const status = document.getElementById('status');
+            const q = document.getElementById('q').value;
+            const a = document.getElementById('a').value;
+
+            if(!q || !a) { alert("Please fill both fields"); return; }
+
+            status.innerText = "Processing... Wait a moment";
+            status.style.color = "orange";
+
+            try {
+                const response = await fetch('/admin/add-to-db', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question: q, answer: a })
+                });
+                const result = await response.json();
+                status.innerText = "Success! Bot has learned this.";
+                status.style.color = "green";
+                document.getElementById('q').value = '';
+                document.getElementById('a').value = '';
+            } catch (err) {
+                status.innerText = "Error! Something went wrong.";
+                status.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>

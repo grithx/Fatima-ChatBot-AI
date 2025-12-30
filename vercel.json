@@ -1,13 +1,6 @@
 {
   "version": 2,
   "rewrites": [
-    {
-      "source": "/ask",
-      "destination": "api/app.py"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "templates/index.html"
-    }
+    { "source": "/(.*)", "destination": "api/app.py" }
   ]
 }

@@ -86,7 +86,7 @@
     <label>User Question:</label>
     <input type="text" id="question" placeholder="e.g. What is the price of Gold Plan?">
     
-    <label>Bot's Fixed Answer:</label>
+    <label>Bot Answer:</label>
     <textarea id="answer" placeholder="Write the exact answer you want the bot to show..."></textarea>
     
     <button onclick="saveToDB()">Save Question & Answer</button>
@@ -119,7 +119,7 @@
 
             if(result.status === "success") {
                 msg.style.color = "green";
-                msg.innerText = "Mubarak ho! Data save ho gaya.";
+                msg.innerText = "Save your data.";
                 document.getElementById('question').value = '';
                 document.getElementById('answer').value = '';
             } else {

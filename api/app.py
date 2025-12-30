@@ -637,3 +637,5 @@ async def ask_bot(request: Request):
         return {"answer": response["answer"]}
     except Exception as e:
         return {"answer": f"AI Error: {str(e)}"}
+    
+    

@@ -2170,6 +2170,40 @@ Context: {context}
 User Question: {input}
 Answer:""")
 
+# @app.post("/ask")
+# async def ask_bot(request: Request):
+#     try:
+#         data = await request.json()
+#         user_input = data.get("message", "").strip()
+#         if not user_input: return {"answer": "Please provide a message."}
+
+#         # 1. Database Check & Topic Validation
+#         db_res = supabase.table("manual_faqs").select("question, answer").execute()
+#         db_data = db_res.data
+#         if db_data:
+#             db_questions = [row['question'] for row in db_data]
+#             verify_prompt = f"Question: {user_input}\nFAQs: {db_questions}\nIs this about ZT Hosting? If yes and matches FAQ return it, if yes no match return 'NO_MATCH', if unrelated return 'OFF_TOPIC'."
+#             match_res = llm.invoke(verify_prompt).content.strip()
+            
+#             if "OFF_TOPIC" in match_res:
+#                 return {"answer": "Sorry, I am here to provide information about ZT Hosting only."}
+#             if "NO_MATCH" not in match_res:
+#                 for row in db_data:
+#                     if row['question'].lower() in match_res.lower():
+#                         return {"answer": row['answer']}
+
+#         # 2. AI Fallback
+#         context = get_context()
+#         full_prompt = prompt.format(context=context, input=user_input)
+#         response = llm.invoke(full_prompt)
+#         return {"answer": response.content.strip()}
+    
+#     except Exception as e:
+#         return {"answer": f"System Error: {str(e)}"}
+
+
+
+
 @app.post("/ask")
 async def ask_bot(request: Request):
     try:
@@ -2177,25 +2211,52 @@ async def ask_bot(request: Request):
         user_input = data.get("message", "").strip()
         if not user_input: return {"answer": "Please provide a message."}
 
-        # 1. Database Check & Topic Validation
+        # 1. DB se FAQs uthana
         db_res = supabase.table("manual_faqs").select("question, answer").execute()
         db_data = db_res.data
+        
+        db_context = "" # DB se milne wala answer yahan store hoga
+        
         if db_data:
             db_questions = [row['question'] for row in db_data]
-            verify_prompt = f"Question: {user_input}\nFAQs: {db_questions}\nIs this about ZT Hosting? If yes and matches FAQ return it, if yes no match return 'NO_MATCH', if unrelated return 'OFF_TOPIC'."
-            match_res = llm.invoke(verify_prompt).content.strip()
             
-            if "OFF_TOPIC" in match_res:
-                return {"answer": "Sorry, I am here to provide information about ZT Hosting only."}
+            # AI check karega ke kya user ka sawal DB ke kisi sawal se milta julta hai
+            verify_prompt = f"""
+            User Question: "{user_input}"
+            DB FAQs: {db_questions}
+            Task: Does this question match any DB FAQ in meaning? 
+            - If YES, return the exact matching question from the list.
+            - If NO, return 'NO_MATCH'.
+            """
+            match_res = llm.invoke(verify_prompt).content.strip()
+
             if "NO_MATCH" not in match_res:
                 for row in db_data:
                     if row['question'].lower() in match_res.lower():
-                        return {"answer": row['answer']}
+                        # Direct answer dene ke bajaye hum answer ko context mein add kar denge
+                        db_context = row['answer']
+                        break
 
-        # 2. AI Fallback
-        context = get_context()
-        full_prompt = prompt.format(context=context, input=user_input)
-        response = llm.invoke(full_prompt)
+        # 2. Final Response Generation (AI Ab DB wale answer ko bhi modify karega)
+        file_context = get_context()
+        
+        # Dono context ko mila dena (File + DB match)
+        combined_context = f"Manual DB Info: {db_context}\n\nGeneral Context: {file_context}"
+
+        enhanced_prompt = f"""
+        You are the Official ZT Hosting Support AI.
+        
+        INSTRUCTIONS:
+        - Use the provided context to answer. 
+        - If 'Manual DB Info' is provided, prioritize it but rephrase it naturally.
+        - Make the answer helpful, professional, and friendly.
+        - If the question is unrelated to ZT Hosting, say: "Sorry, I am here to provide information about ZT Hosting only."
+        
+        Context: {combined_context}
+        User: {user_input}
+        AI:"""
+        
+        response = llm.invoke(enhanced_prompt)
         return {"answer": response.content.strip()}
     
     except Exception as e:

@@ -61,7 +61,7 @@
 
 
 
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -80,6 +80,102 @@
     </style>
 </head>
 <body>
+
+<div class="admin-box">
+    <h2>ZT Admin Panel</h2>
+    <label>User Question:</label>
+    <input type="text" id="question" placeholder="e.g. What is the price of Gold Plan?">
+    
+    <label>Bot Answer:</label>
+    <textarea id="answer" placeholder="Write the exact answer you want the bot to show..."></textarea>
+    
+    <button onclick="saveToDB()">Save Question & Answer</button>
+    <div id="status-msg"></div>
+</div>
+
+<script>
+    async function saveToDB() {
+        const q = document.getElementById('question').value;
+        const a = document.getElementById('answer').value;
+        const msg = document.getElementById('status-msg');
+
+        if(!q || !a) {
+            msg.style.color = "red";
+            msg.innerText = "Please fill both fields!";
+            return;
+        }
+
+        msg.style.color = "blue";
+        msg.innerText = "Saving...";
+
+        try {
+            const response = await fetch('/add-faq', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question: q, answer: a })
+            });
+
+            const result = await response.json();
+
+            if(result.status === "success") {
+                msg.style.color = "green";
+                msg.innerText = "Save your data.";
+                document.getElementById('question').value = '';
+                document.getElementById('answer').value = '';
+            } else {
+                msg.style.color = "red";
+                msg.innerText = "Error: " + result.message;
+            }
+        } catch (error) {
+            msg.style.color = "red";
+            msg.innerText = "Server connection failed!";
+        }
+    }
+</script>
+
+</body>
+</html> -->
+
+
+    <!-- working all code fine just add logout button on to the admin panel  -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZT Hosting - Admin Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; position: relative; }
+        
+        /* Logout Button Style */
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .logout-btn:hover { background-color: #a71d2a; }
+
+        .admin-box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 400px; }
+        h2 { color: #007bff; text-align: center; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        textarea { height: 100px; resize: none; }
+        button { width: 100%; background-color: #007bff; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background 0.3s; }
+        button:hover { background-color: #0056b3; }
+        #status-msg { text-align: center; margin-top: 15px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<a href="/logout" class="logout-btn">Logout</a>
 
 <div class="admin-box">
     <h2>ZT Admin Panel</h2>

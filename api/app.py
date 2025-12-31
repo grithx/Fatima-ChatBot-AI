@@ -1827,8 +1827,8 @@ ADMIN_HTML_PATH = BASE_DIR / "templates" / "admin.html"
 LOGIN_HTML_PATH = BASE_DIR / "templates" / "login.html"
 
 # Credentials
-ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "ZT_Password_123"
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 RECAPTCHA_SECRET_KEY = os.getenv("RECAPTCHA_SECRET_KEY")
 
 # Supabase Setup
@@ -1850,13 +1850,44 @@ async def get_login():
             return f.read()
     return f"<h1>Error: login.html not found!</h1><p>Path: {LOGIN_HTML_PATH}</p>"
 
+# @app.post("/login")
+# async def do_login(
+#     username: str = Form(...), 
+#     password: str = Form(...), 
+#     g_recaptcha_response: str = Form(None, alias="g-recaptcha-response")
+# ):
+#     # 1. Verify reCAPTCHA
+#     verify_url = "https://www.google.com/recaptcha/api/siteverify"
+#     res = requests.post(verify_url, data={
+#         "secret": RECAPTCHA_SECRET_KEY,
+#         "response": g_recaptcha_response
+#     }).json()
+
+#     if not res.get("success"):
+#         return HTMLResponse("<h2>Captcha Verification Failed! Please try again.</h2>", status_code=400)
+
+#     # 2. Check Credentials
+#     if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+#         response = RedirectResponse(url="/admin-zt", status_code=303)
+#         # Cookie set kar rahe hain jo 24 hours tak valid hogi
+#         response.set_cookie(key="admin_session", value="active", httponly=True, max_age=86400)
+#         return response
+    
+#     return HTMLResponse("<h2>Invalid Username or Password!</h2>", status_code=401)
+
+
+
 @app.post("/login")
 async def do_login(
     username: str = Form(...), 
     password: str = Form(...), 
     g_recaptcha_response: str = Form(None, alias="g-recaptcha-response")
 ):
-    # 1. Verify reCAPTCHA
+    # 1. Environment Variables se credentials lena
+    ENV_USER = os.getenv("ADMIN_USERNAME")
+    ENV_PASS = os.getenv("ADMIN_PASSWORD")
+
+    # 2. Verify reCAPTCHA (Wohi purani logic)
     verify_url = "https://www.google.com/recaptcha/api/siteverify"
     res = requests.post(verify_url, data={
         "secret": RECAPTCHA_SECRET_KEY,
@@ -1864,15 +1895,23 @@ async def do_login(
     }).json()
 
     if not res.get("success"):
-        return HTMLResponse("<h2>Captcha Verification Failed! Please try again.</h2>", status_code=400)
+        return HTMLResponse("<h2>Captcha Verification Failed!</h2>", status_code=400)
 
-    # 2. Check Credentials
-    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+    # 3. YAHAN CHECK LGANA HAI:
+    # Form se aaye huye data ko Environment Variables se compare karna
+    if username == ENV_USER and password == ENV_PASS:
         response = RedirectResponse(url="/admin-zt", status_code=303)
-        # Cookie set kar rahe hain jo 24 hours tak valid hogi
-        response.set_cookie(key="admin_session", value="active", httponly=True, max_age=86400)
+        # Session cookie set karna
+        response.set_cookie(
+            key="admin_session", 
+            value="active", 
+            httponly=True, 
+            max_age=86400, # 24 hours
+            samesite="lax"
+        )
         return response
     
+    # Agar galat ho to wapis error message
     return HTMLResponse("<h2>Invalid Username or Password!</h2>", status_code=401)
 
 @app.get("/logout")

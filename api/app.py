@@ -2203,6 +2203,8 @@
 
 
 
+# update to fix the grok api key invalid issue 
+
 
 import os 
 from pathlib import Path
@@ -2224,45 +2226,40 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- Configuration & Path Settings ---
+# --- Vercel Specific Path Configuration ---
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_PATH = BASE_DIR / "data" / "zt_data.txt"
 HTML_PATH = BASE_DIR / "templates" / "index.html"
-ADMIN_HTML_PATH = BASE_DIR / "templates" / "admin.html"
-LOGIN_HTML_PATH = BASE_DIR / "templates" / "login.html"
 
-# Environment Variables (Directly using os.environ for Vercel)
-ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME")
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
-RECAPTCHA_SECRET_KEY = os.environ.get("RECAPTCHA_SECRET_KEY")
+# --- Secure Client Initialization ---
+# Hum variables ko function ke andar check karenge taake code crash na ho
+def get_supabase():
+    url = os.environ.get("SUPABASE_URL")
+    key = os.environ.get("SUPABASE_KEY")
+    if not url or not key:
+        return None
+    return create_client(url, key)
 
-# Supabase & LLM Setup
-supabase: Client = create_client(os.environ.get("SUPABASE_URL"), os.environ.get("SUPABASE_KEY"))
+def get_llm():
+    api_key = os.environ.get("GROQ_API_KEY")
+    if not api_key:
+        return None
+    return ChatGroq(
+        groq_api_key=api_key, 
+        model_name="llama-3.3-70b-versatile", 
+        temperature=0.1 
+    )
 
-# LLM setup with explicit Key check
-GROQ_KEY = os.environ.get("GROQ_API_KEY")
-llm = ChatGroq(
-    groq_api_key=GROQ_KEY, 
-    model_name="llama-3.3-70b-versatile", 
-    temperature=0.1 
-)
+# --- AI Logic (To-the-point & Highlighted) ---
 
-# --- AI Logic (To-the-point & Structured) ---
-
-def get_context():
-    if DATA_PATH.exists():
-        return DATA_PATH.read_text(encoding="utf-8")[:8000]
-    return "No hosting info available."
-
-# NEW PROMPT: To-the-point and Bold formatting
 prompt = ChatPromptTemplate.from_template("""
 You are the Official ZT Hosting Support AI.
 
 STRICT RULES:
-1. **To-the-point**: Provide short, direct answers. No fluff or extra greetings.
-2. **Formatting**: Use **bold** for prices, plan names, and storage.
-3. **Guardrail**: If query is NOT about ZT Hosting, reply ONLY: "Sorry, I am here to provide information about ZT Hosting only."
-4. If context is provided, prioritize it.
+1. **To-the-point**: Give a very direct answer. No "Hello", "How can I help", or filler text.
+2. **Highlighting**: Use **bold text** for prices, storage limits, and plan names.
+3. **Guardrail**: If the question is not about ZT Hosting, reply ONLY: "Sorry, I am here to provide information about ZT Hosting only."
+4. **Structure**: Keep it to 1-2 sentences maximum.
 
 Context: {context}
 User Question: {input}
@@ -2271,44 +2268,45 @@ Answer:""")
 @app.post("/ask")
 async def ask_bot(request: Request):
     try:
-        # Check if API Key is missing
-        if not GROQ_KEY:
-            return {"answer": "System Error: GROQ_API_KEY is missing in Vercel settings."}
-
         data = await request.json()
         user_input = data.get("message", "").strip()
-        if not user_input: return {"answer": "Please provide a message."}
+        
+        llm = get_llm()
+        supabase = get_supabase()
 
-        # 1. Database Check (Semantic Match)
-        db_res = supabase.table("manual_faqs").select("question, answer").execute()
+        if not llm:
+            return {"answer": "Error: GROQ_API_KEY is not set in Vercel settings."}
+
+        # 1. Database Priority Check
         db_context = ""
-        if db_res.data:
-            questions = [row['question'] for row in db_res.data]
-            verify_prompt = f"Question: {user_input}\nContext: {questions}\nReturn 'OFF' if unrelated, 'YES' if matches an item, else 'NO'."
-            match_res = llm.invoke(verify_prompt).content.strip().upper()
-            
-            if "OFF" in match_res:
-                return {"answer": "Sorry, I am here to provide information about ZT Hosting only."}
-            
-            if "YES" in match_res:
-                # Find matching row manually to avoid extra LLM call
+        if supabase:
+            db_res = supabase.table("manual_faqs").select("question, answer").execute()
+            if db_res.data:
                 for row in db_res.data:
                     if row['question'].lower() in user_input.lower():
                         db_context = f"Manual Info: {row['answer']}"
                         break
 
-        # 2. Final Generation
-        file_context = get_context()
-        combined_context = f"{db_context}\n\n{file_context}"
+        # 2. File Context
+        file_context = ""
+        if DATA_PATH.exists():
+            file_context = DATA_PATH.read_text(encoding="utf-8")[:5000]
+
+        # 3. Generate Response
+        combined_context = f"{db_context}\n{file_context}"
+        formatted_prompt = prompt.format(context=combined_context, input=user_input)
         
-        response = llm.invoke(prompt.format(context=combined_context, input=user_input))
+        # Check topic before final answer
+        if len(user_input) < 3: return {"answer": "Please ask a valid question about ZT Hosting."}
+        
+        response = llm.invoke(formatted_prompt)
         return {"answer": response.content.strip()}
     
     except Exception as e:
         return {"answer": f"System Error: {str(e)}"}
 
-# --- Routes (Keep your existing Auth/Admin routes below) ---
 @app.get("/", response_class=HTMLResponse)
 async def get_home():
-    if HTML_PATH.exists(): return HTML_PATH.read_text(encoding="utf-8")
+    if HTML_PATH.exists():
+        return HTML_PATH.read_text(encoding="utf-8")
     return "<h1>Main index.html missing</h1>"

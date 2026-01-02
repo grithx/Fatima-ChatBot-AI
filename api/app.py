@@ -2772,7 +2772,8 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 import requests
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
-from supabase import create_client, Client 
+from supabase import create_client, Client
+from response_formatter import ResponseFormatter
 
 app = FastAPI()
 
@@ -2964,7 +2965,10 @@ async def ask_bot(request: Request):
             # Strict database priority - return immediately on match
             for row in db_res.data:
                 if row['question'].lower() in user_input:
-                    return {"answer": row['answer']}
+                    # Apply ResponseFormatter to database answers too
+                    formatter = ResponseFormatter(style=response_style)
+                    formatted_answer = formatter.format(row['answer'], user_input)
+                    return {"answer": formatted_answer}
         else:
             # AI supplement mode - collect DB context but don't return yet
             for row in db_res.data:
@@ -3049,7 +3053,11 @@ async def ask_bot(request: Request):
         chain = prompt | llm
         response = chain.invoke({"input": user_input})
         
-        return {"answer": response.content.strip()}
+        # Apply ResponseFormatter after LLM output
+        formatter = ResponseFormatter(style=response_style)
+        formatted_answer = formatter.format(response.content.strip(), user_input)
+        
+        return {"answer": formatted_answer}
 
     except Exception as e:
         # Code 413 or 429 management

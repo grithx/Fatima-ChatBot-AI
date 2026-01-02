@@ -2481,52 +2481,52 @@ async def add_faq(request: Request):
 #         return {"answer": response.content.strip()}
 #     except Exception as e:
 #         return {"answer": f"System Error: {str(e)}"}
-    
 
 
 
+# Updated app.py logic to fix "I don't know" issue
 @app.post("/ask")
 async def ask_bot(request: Request):
     try:
         data = await request.json()
         user_input = data.get("message", "").strip()
         
-        # 1. Database se saara data uthayein (Context ke liye)
+        # 1. Database se FAQ uthayen
         db_res = supabase.table("manual_faqs").select("question, answer").execute()
         db_context = ""
         if db_res.data:
-            db_context = "DATABASE KNOWLEDGE:\n" + "\n".join([f"Q: {row['question']} A: {row['answer']}" for row in db_res.data])
+            db_context = "\n".join([f"Q: {row['question']} A: {row['answer']}" for row in db_res.data])
 
-        # 2. AI ko Decision Maker banayein (Keywords ki zaroorat khatam)
+        # 2. File (zt_data.txt) se data read karein
+        file_context = DATA_PATH.read_text(encoding="utf-8") if DATA_PATH.exists() else ""
+
         llm = get_llm()
-        llm.max_tokens = 120
+        # Temperature 0 rakhein taake model tukkay na mare, lekin temperature 0.2 behtar hai natural language ke liye
+        llm.temperature = 0.2 
         
-        # Is prompt mein hum AI ko pehle sawal parakhne ka keh rahe hain
         prompt = ChatPromptTemplate.from_template("""
-        You are an AI Gatekeeper and Support Agent for ZT Hosting.
+        You are the ZT Hosting Support Specialist. Your job is to help users with Hosting and Domain information.
 
-        STEP 1: Analyze if the user's question is related to web hosting, domains, servers, billing, refunds, or ZT Hosting services.
-        STEP 2: If NOT related (e.g., jokes, general knowledge, sports), reply ONLY: "Sorry, I am here to provide information about ZT Hosting only."
-        STEP 3: If RELATED, find the best answer from 'DATABASE KNOWLEDGE' or 'FILE CONTEXT'.
-        
-        RULES:
-        - Be concise (1-2 sentences).
-        - No greetings (No Hello/Hi).
-        - Enhance DB answers to be professional.
-        - Use **bold** for prices.
-
-        DATABASE KNOWLEDGE:
+        CONTEXT INFORMATION:
+        ---
+        DATABASE FAQS:
         {db_info}
-
-        FILE CONTEXT:
+        
+        WEBSITE DATA & PRICING:
         {file_info}
+        ---
+
+        INSTRUCTIONS:
+        1. Use the provided CONTEXT to answer the user's question.
+        2. If the answer is in the context, you MUST provide it. Don't say "I don't know" if the info is there.
+        3. If the user asks for prices (e.g., .pk domain or shared hosting), look carefully at the WEBSITE DATA section.
+        4. If the question is NOT related to hosting/domains at all, politely say: "I can only help you with ZT Hosting related queries."
+        5. Keep answers short (max 2-3 sentences).
+        6. Use **bold** for prices and plan names.
 
         USER QUESTION: {input}
         ANSWER:""")
 
-        file_context = DATA_PATH.read_text(encoding="utf-8")[:3000] if DATA_PATH.exists() else ""
-        
-        # AI ab khud context aur intent ko match karega
         response = llm.invoke(prompt.format(
             db_info=db_context, 
             file_info=file_context, 
@@ -2536,7 +2536,9 @@ async def ask_bot(request: Request):
         return {"answer": response.content.strip()}
 
     except Exception as e:
-        return {"answer": "I'm sorry, I'm having trouble connecting. Please try again."}
+        print(f"Error: {e}")
+        return {"answer": "Technical issue ki wajah se reply nahi de pa raha. Please try again."}
+    
 @app.get("/", response_class=HTMLResponse)
 async def get_home():
     if HTML_PATH.exists(): return HTML_PATH.read_text(encoding="utf-8")

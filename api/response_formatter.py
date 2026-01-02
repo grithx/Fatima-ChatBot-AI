@@ -50,7 +50,7 @@ class ResponseFormatter:
     URL_PATTERN = r"https?://[^\s<>\"\']+"
     
     # Pricing/policy keywords for sentence prioritization
-    PRICING_KEYWORDS = ["price", "cost", "pkr", "$", "pricing", "plan", "package"]
+    PRICING_KEYWORDS = ["price", "cost", "pkr", "$", "€", "£", "pricing", "plan", "package", "subscription", "fee"]
     POLICY_KEYWORDS = ["policy", "refund", "terms", "condition", "guarantee"]
     
     def __init__(self, style: str = "short"):
@@ -100,7 +100,7 @@ class ResponseFormatter:
         # Step 7: Limit sentences based on style
         response = self._limit_sentences(response)
         
-        # Step 7: Clean up extra whitespace and formatting
+        # Step 8: Final cleanup for punctuation and whitespace
         response = self._clean_response(response)
         
         return response

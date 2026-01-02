@@ -1,6 +1,9 @@
 """
 Integration test for ResponseFormatter with the API endpoint.
 This tests the full flow without requiring actual API keys.
+
+Note: Using sys.path.insert for test convenience. In production,
+the api/ directory is in the Python path via proper packaging.
 """
 import sys
 sys.path.insert(0, 'api')

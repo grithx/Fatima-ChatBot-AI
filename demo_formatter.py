@@ -1,6 +1,9 @@
 """
 Manual demonstration of ResponseFormatter integration
 This shows how the formatter works with various inputs
+
+Note: Using sys.path.insert for demo convenience. In production,
+the api/ directory is in the Python path via proper packaging.
 """
 import sys
 sys.path.insert(0, 'api')

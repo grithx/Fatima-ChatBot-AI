@@ -2206,6 +2206,117 @@
 # update to fix the grok api key invalid issue 
 
 
+# import os 
+# from pathlib import Path
+# from fastapi import FastAPI, Request, Form
+# from fastapi.middleware.cors import CORSMiddleware
+# from fastapi.responses import HTMLResponse, RedirectResponse
+# import requests
+# from langchain_groq import ChatGroq
+# from langchain_core.prompts import ChatPromptTemplate
+# from supabase import create_client, Client 
+
+# app = FastAPI()
+
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=["*"],
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
+
+# # --- Vercel Specific Path Configuration ---
+# BASE_DIR = Path(__file__).resolve().parent.parent
+# DATA_PATH = BASE_DIR / "data" / "zt_data.txt"
+# HTML_PATH = BASE_DIR / "templates" / "index.html"
+
+# # --- Secure Client Initialization ---
+# # Hum variables ko function ke andar check karenge taake code crash na ho
+# def get_supabase():
+#     url = os.environ.get("SUPABASE_URL")
+#     key = os.environ.get("SUPABASE_KEY")
+#     if not url or not key:
+#         return None
+#     return create_client(url, key)
+
+# def get_llm():
+#     api_key = os.environ.get("GROQ_API_KEY")
+#     if not api_key:
+#         return None
+#     return ChatGroq(
+#         groq_api_key=api_key, 
+#         model_name="llama-3.3-70b-versatile", 
+#         temperature=0.1 
+#     )
+
+# # --- AI Logic (To-the-point & Highlighted) ---
+
+# prompt = ChatPromptTemplate.from_template("""
+# You are the Official ZT Hosting Support AI.
+
+# STRICT RULES:
+# 1. **To-the-point**: Give a very direct answer. No "Hello", "How can I help", or filler text.
+# 2. **Highlighting**: Use **bold text** for prices, storage limits, and plan names.
+# 3. **Guardrail**: If the question is not about ZT Hosting, reply ONLY: "Sorry, I am here to provide information about ZT Hosting only."
+# 4. **Structure**: Keep it to 1-2 sentences maximum.
+
+# Context: {context}
+# User Question: {input}
+# Answer:""")
+
+# @app.post("/ask")
+# async def ask_bot(request: Request):
+#     try:
+#         data = await request.json()
+#         user_input = data.get("message", "").strip()
+        
+#         llm = get_llm()
+#         supabase = get_supabase()
+
+#         if not llm:
+#             return {"answer": "Error: GROQ_API_KEY is not set in Vercel settings."}
+
+#         # 1. Database Priority Check
+#         db_context = ""
+#         if supabase:
+#             db_res = supabase.table("manual_faqs").select("question, answer").execute()
+#             if db_res.data:
+#                 for row in db_res.data:
+#                     if row['question'].lower() in user_input.lower():
+#                         db_context = f"Manual Info: {row['answer']}"
+#                         break
+
+#         # 2. File Context
+#         file_context = ""
+#         if DATA_PATH.exists():
+#             file_context = DATA_PATH.read_text(encoding="utf-8")[:5000]
+
+#         # 3. Generate Response
+#         combined_context = f"{db_context}\n{file_context}"
+#         formatted_prompt = prompt.format(context=combined_context, input=user_input)
+        
+#         # Check topic before final answer
+#         if len(user_input) < 3: return {"answer": "Please ask a valid question about ZT Hosting."}
+        
+#         response = llm.invoke(formatted_prompt)
+#         return {"answer": response.content.strip()}
+    
+#     except Exception as e:
+#         return {"answer": f"System Error: {str(e)}"}
+
+# @app.get("/", response_class=HTMLResponse)
+# async def get_home():
+#     if HTML_PATH.exists():
+#         return HTML_PATH.read_text(encoding="utf-8")
+#     return "<h1>Main index.html missing</h1>"
+
+
+
+# Niche diya gaya mukammal code copy karein aur apni api/app.py mein replace kar dein. Ismein maine Login, Admin Panel, Logout, aur Vercel Fixes sab add kar diye hain.
+
+
+
 import os 
 from pathlib import Path
 from fastapi import FastAPI, Request, Form
@@ -2226,87 +2337,103 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- Vercel Specific Path Configuration ---
+# --- Path Configuration ---
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_PATH = BASE_DIR / "data" / "zt_data.txt"
 HTML_PATH = BASE_DIR / "templates" / "index.html"
+ADMIN_HTML_PATH = BASE_DIR / "templates" / "admin.html"
+LOGIN_HTML_PATH = BASE_DIR / "templates" / "login.html"
 
-# --- Secure Client Initialization ---
-# Hum variables ko function ke andar check karenge taake code crash na ho
-def get_supabase():
-    url = os.environ.get("SUPABASE_URL")
-    key = os.environ.get("SUPABASE_KEY")
-    if not url or not key:
-        return None
-    return create_client(url, key)
+# Credentials from Vercel Environment Variables
+ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
+RECAPTCHA_SECRET_KEY = os.environ.get("RECAPTCHA_SECRET_KEY")
+
+# --- Clients Setup ---
+supabase: Client = create_client(os.environ.get("SUPABASE_URL", ""), os.environ.get("SUPABASE_KEY", ""))
 
 def get_llm():
-    api_key = os.environ.get("GROQ_API_KEY")
-    if not api_key:
-        return None
     return ChatGroq(
-        groq_api_key=api_key, 
+        groq_api_key=os.environ.get("GROQ_API_KEY"), 
         model_name="llama-3.3-70b-versatile", 
         temperature=0.1 
     )
 
-# --- AI Logic (To-the-point & Highlighted) ---
+# --- Helper: Authentication ---
+def check_auth(request: Request):
+    return request.cookies.get("admin_session") == "active"
 
-prompt = ChatPromptTemplate.from_template("""
-You are the Official ZT Hosting Support AI.
+# --- Auth Routes ---
 
-STRICT RULES:
-1. **To-the-point**: Give a very direct answer. No "Hello", "How can I help", or filler text.
-2. **Highlighting**: Use **bold text** for prices, storage limits, and plan names.
-3. **Guardrail**: If the question is not about ZT Hosting, reply ONLY: "Sorry, I am here to provide information about ZT Hosting only."
-4. **Structure**: Keep it to 1-2 sentences maximum.
+@app.get("/login", response_class=HTMLResponse)
+async def get_login():
+    if LOGIN_HTML_PATH.exists():
+        return LOGIN_HTML_PATH.read_text(encoding="utf-8")
+    return "<h1>Login Page Missing</h1>"
 
-Context: {context}
-User Question: {input}
-Answer:""")
+@app.post("/login")
+async def do_login(username: str = Form(...), password: str = Form(...), g_recaptcha_response: str = Form(None, alias="g-recaptcha-response")):
+    # Verify reCAPTCHA
+    verify_url = "https://www.google.com/recaptcha/api/siteverify"
+    res = requests.post(verify_url, data={"secret": RECAPTCHA_SECRET_KEY, "response": g_recaptcha_response}).json()
+
+    if not res.get("success"):
+        return HTMLResponse("<h2>Captcha Failed!</h2>", status_code=400)
+
+    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+        response = RedirectResponse(url="/admin-zt", status_code=303)
+        response.set_cookie(key="admin_session", value="active", httponly=True, secure=True, samesite="lax")
+        return response
+    
+    return HTMLResponse("<h2>Invalid Credentials!</h2>", status_code=401)
+
+@app.get("/logout")
+async def logout():
+    response = RedirectResponse(url="/login")
+    response.delete_cookie("admin_session")
+    return response
+
+# --- Protected Admin Routes ---
+
+@app.get("/admin-zt", response_class=HTMLResponse)
+async def get_admin(request: Request):
+    if not check_auth(request):
+        return RedirectResponse(url="/login", status_code=303)
+    if ADMIN_HTML_PATH.exists():
+        return ADMIN_HTML_PATH.read_text(encoding="utf-8")
+    return "<h1>Admin Page Missing</h1>"
+
+@app.post("/add-faq")
+async def add_faq(request: Request):
+    if not check_auth(request): return {"status": "error", "message": "Unauthorized"}
+    data = await request.json()
+    supabase.table("manual_faqs").insert({"question": data.get("question").lower(), "answer": data.get("answer")}).execute()
+    return {"status": "success"}
+
+# --- AI & Main Routes ---
 
 @app.post("/ask")
 async def ask_bot(request: Request):
     try:
         data = await request.json()
         user_input = data.get("message", "").strip()
-        
         llm = get_llm()
-        supabase = get_supabase()
 
-        if not llm:
-            return {"answer": "Error: GROQ_API_KEY is not set in Vercel settings."}
+        # Database Check
+        db_res = supabase.table("manual_faqs").select("question, answer").execute()
+        for row in db_res.data:
+            if row['question'].lower() in user_input.lower():
+                return {"answer": row['answer']}
 
-        # 1. Database Priority Check
-        db_context = ""
-        if supabase:
-            db_res = supabase.table("manual_faqs").select("question, answer").execute()
-            if db_res.data:
-                for row in db_res.data:
-                    if row['question'].lower() in user_input.lower():
-                        db_context = f"Manual Info: {row['answer']}"
-                        break
-
-        # 2. File Context
-        file_context = ""
-        if DATA_PATH.exists():
-            file_context = DATA_PATH.read_text(encoding="utf-8")[:5000]
-
-        # 3. Generate Response
-        combined_context = f"{db_context}\n{file_context}"
-        formatted_prompt = prompt.format(context=combined_context, input=user_input)
-        
-        # Check topic before final answer
-        if len(user_input) < 3: return {"answer": "Please ask a valid question about ZT Hosting."}
-        
-        response = llm.invoke(formatted_prompt)
+        # AI Fallback
+        prompt = ChatPromptTemplate.from_template("You are ZT Hosting Support. Answer briefly and use **bold** for prices. Context: {context} Question: {input}")
+        context = DATA_PATH.read_text(encoding="utf-8")[:5000] if DATA_PATH.exists() else ""
+        response = llm.invoke(prompt.format(context=context, input=user_input))
         return {"answer": response.content.strip()}
-    
     except Exception as e:
         return {"answer": f"System Error: {str(e)}"}
 
 @app.get("/", response_class=HTMLResponse)
 async def get_home():
-    if HTML_PATH.exists():
-        return HTML_PATH.read_text(encoding="utf-8")
-    return "<h1>Main index.html missing</h1>"
+    if HTML_PATH.exists(): return HTML_PATH.read_text(encoding="utf-8")
+    return "<h1>Chatbot Home</h1>"

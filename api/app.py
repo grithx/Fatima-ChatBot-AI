@@ -2937,17 +2937,16 @@ async def ask_bot(request: Request):
         if not user_input:
             return {"answer": "Aapka sawal kya hai?"}
 
-        # --- STEP 1: DATABASE CHECK (Sabse pehle aur fast) ---
+        # --- STEP 1: DATABASE CHECK ---
         db_res = supabase.table("manual_faqs").select("question, answer").execute()
         for row in db_res.data:
             if row['question'].lower() in user_input:
                 return {"answer": row['answer']}
 
-        # --- STEP 2: SMART FILE ROUTING (Accuracy ke liye) ---
-        # Default file agar kuch match na ho
-        file_name = "shared_webhosting.txt" 
+        # --- STEP 2: SMART FILE ROUTING ---
+        # Default file: Agar koi specific keyword na mile toh home page ya general info use karein
+        file_name = "zt_home_page.txt" 
         
-        # User ke keywords dekh kar file select karein
         if "reseller" in user_input:
             file_name = "reseller_hosting.txt"
         elif any(x in user_input for x in ["domain", ".pk", ".com", "register"]):
@@ -2964,22 +2963,25 @@ async def ask_bot(request: Request):
             file_name = "pro_dedicated_servers.txt"
         elif "promo" in user_input or "offer" in user_input:
             file_name = "promo_packages.txt"
+        elif "shared" in user_input or "web hosting" in user_input:
+            file_name = "shared_webhosting.txt"
 
         target_path = BASE_DIR / "data" / file_name
         
-        # Backup check agar specific file na mile
-        if not target_path.exists():
-            target_path = DATA_PATH # purani main file
-            
-        context_text = target_path.read_text(encoding="utf-8")
+        # Sirf tabhi parhein agar file exist karti ho
+        if target_path.exists():
+            # [:4000] characters limit taake Groq ka 6000 token limit error na aaye
+            context_text = target_path.read_text(encoding="utf-8")[:4000]
+        else:
+            return {"answer": "I am sorry, I don't have specific details about this service yet."}
 
-        # --- STEP 3: AI PROCESSING (Small context = Fast Response) ---
+        # --- STEP 3: AI PROCESSING ---
         llm = get_llm()
         system_prompt = (
             "You are ZT Hosting Support assistant. Answer ONLY based on the provided context. "
             "PRIORITY: For pricing, strictly use Markdown tables. "
             "Always mention first-month price (e.g. $1) AND renewal price (e.g. PKR 2570) if present. "
-            "Use **bold** for prices, plan names, and key features. "
+            "Use **bold** for prices and plans. "
             "If info is not in context, say 'I am sorry, I don't have this information yet.'"
         )
         
@@ -2994,8 +2996,9 @@ async def ask_bot(request: Request):
         return {"answer": response.content.strip()}
 
     except Exception as e:
-        if "429" in str(e):
-            return {"answer": "Bot is busy (Rate Limit). Please wait 10-15 minutes."}
+        # Code 413 or 429 management
+        if "413" in str(e) or "limit" in str(e).lower():
+            return {"answer": "The request is too large or system is busy. Please try asking a shorter question."}
         return {"answer": f"System Error: {str(e)}"}
 
 

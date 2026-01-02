@@ -2805,7 +2805,8 @@ supabase: Client = create_client(os.environ.get("SUPABASE_URL", ""), os.environ.
 def get_llm():
     return ChatGroq(
         groq_api_key=os.environ.get("GROQ_API_KEY"), 
-        model_name="llama3-8b-8192", # Change 1: Token Saving Model
+        # Updated to a currently supported model
+        model_name="llama-3.1-8b-instant", 
         temperature=0.1 
     )
 

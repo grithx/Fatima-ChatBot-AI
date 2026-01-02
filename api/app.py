@@ -2772,7 +2772,9 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 import requests
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
-from supabase import create_client, Client 
+from supabase import create_client, Client
+from response_formatter import ResponseFormatter
+from output_parser import FormattedOutputParser
 
 app = FastAPI()
 
@@ -2964,7 +2966,17 @@ async def ask_bot(request: Request):
             # Strict database priority - return immediately on match
             for row in db_res.data:
                 if row['question'].lower() in user_input:
-                    return {"answer": row['answer']}
+                    # Apply OutputParser to database answers too
+                    output_parser = FormattedOutputParser(style=response_style, user_input=user_input)
+                    result = output_parser.parse(row['answer'])
+                    return {
+                        "answer": result["final_text"],
+                        "metadata": {
+                            "tokens_used": result["tokens_used"],
+                            "truncated": result["truncated"],
+                            "source": "database"
+                        }
+                    }
         else:
             # AI supplement mode - collect DB context but don't return yet
             for row in db_res.data:
@@ -3046,10 +3058,23 @@ async def ask_bot(request: Request):
             ("user", f"Context: {context_text}\n\nQuestion: {user_input}")
         ])
 
-        chain = prompt | llm
-        response = chain.invoke({"input": user_input})
+        # Create OutputParser with current settings
+        output_parser = FormattedOutputParser(style=response_style, user_input=user_input)
         
-        return {"answer": response.content.strip()}
+        # Wire OutputParser into chain via RunnableSequence
+        chain = prompt | llm | output_parser
+        
+        # Invoke the chain - parser returns structured output
+        result = chain.invoke({"input": user_input})
+        
+        # Return the formatted text with metadata
+        return {
+            "answer": result["final_text"],
+            "metadata": {
+                "tokens_used": result["tokens_used"],
+                "truncated": result["truncated"]
+            }
+        }
 
     except Exception as e:
         # Code 413 or 429 management

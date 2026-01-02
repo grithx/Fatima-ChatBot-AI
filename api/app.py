@@ -2885,30 +2885,31 @@ async def ask_bot(request: Request):
         if not user_input:
             return {"answer": "Aapka sawal kya hai?"}
 
-        llm = get_llm()
-
-        # 1. Database Check (Manual FAQs)
+        # --- STEP 1: DATABASE CHECK FIRST ---
+        # Hum database se saare FAQs nikal kar check karenge
         db_res = supabase.table("manual_faqs").select("question, answer").execute()
+        
         for row in db_res.data:
-            if row['question'].lower() in user_input.lower():
+            # Check agar user ka sawal DB ke kisi sawal se match karta hai
+            if row['question'].lower() in user_input.lower() or user_input.lower() in row['question'].lower():
+                # Agar DB mein mil jaye toh yahin se jawab de dein (No AI needed)
                 return {"answer": row['answer']}
 
-        # 2. Optimized File Context Check
+        # --- STEP 2: FILE & AI PROCESSING (Agar DB mein jawab na mile) ---
+        llm = get_llm()
+
         if not DATA_PATH.exists():
             return {"answer": "System error: Knowledge base file is missing."}
         
-        # Reduced to 10,000 for faster processing while keeping all tables
-        context_text = DATA_PATH.read_text(encoding="utf-8")[:10000] 
+        # Optimized context for speed
+        context_text = DATA_PATH.read_text(encoding="utf-8")[:10000]
 
-        # 3. Enhanced Instructions for Speed and Accuracy
         system_prompt = (
-            "You are ZT Hosting Support assistant. Provide detailed and accurate answers. "
-            "PRIORITY RULE: Always use prices from the 'Select Your Plan' tables. "
-            "If a plan has a first-month price (e.g., $1) and a renewal price (e.g., PKR 2570), mention BOTH clearly. "
-            "For example: 'Reseller-1 is **$1** for the first month and renews at **PKR 2570**.' "
-            "Do not give one-word answers; explain the features like cPanel accounts and storage if asked about a plan. "
-            "Use **bold** for all prices, plan names, and key features. "
-            "If the information is not in the context, say 'I am sorry, I don't have this information yet.'"
+            "You are ZT Hosting Support assistant. "
+            "Priority: Use the tables in the context for pricing. "
+            "Mention both first-month and renewal prices if available. "
+            "If information is not in context, say 'I am sorry, I don't have this information yet.' "
+            "Use **bold** for prices and plan names."
         )
         
         prompt = ChatPromptTemplate.from_messages([
@@ -2917,12 +2918,14 @@ async def ask_bot(request: Request):
         ])
 
         chain = prompt | llm
-        # Invoke with optimized context for faster response
         response = chain.invoke({"context": context_text, "input": user_input})
         
         return {"answer": response.content.strip()}
 
     except Exception as e:
+        # Rate limit handling
+        if "429" in str(e):
+            return {"answer": "System is busy. Please try again in 10 minutes."}
         return {"answer": f"System Error: {str(e)}"}
 
 # --- Routes for UI (Baqi routes same rahenge) ---

@@ -2491,36 +2491,38 @@ async def ask_bot(request: Request):
         data = await request.json()
         user_input = data.get("message", "").strip()
         
-        # 1. Topic Guardrail
-        hosting_keywords = ["hosting", "server", "domain", "plan", "price", "ssd", "zt", "support", "gold", "refund", "email"]
-        if not any(word in user_input.lower() for word in hosting_keywords) and len(user_input) > 5:
+        # 1. Strict Keyword Shield (For Off-topic)
+        hosting_keywords = ["hosting", "server", "domain", "plan", "price", "ssd", "zt", "support", "gold", "refund", "email", "cost", "buy"]
+        if not any(word in user_input.lower() for word in hosting_keywords) and len(user_input) > 3:
             return {"answer": "Sorry, I am here to provide information about ZT Hosting only."}
 
-        # 2. Database Fetch
+        # 2. Database Fetch for Context
         db_res = supabase.table("manual_faqs").select("question, answer").execute()
         db_context = ""
         if db_res.data:
-            db_context = "DATABASE INFO:\n" + "\n".join([f"Q: {row['question']} A: {row['answer']}" for row in db_res.data])
+            db_context = "DATABASE KNOWLEDGE:\n" + "\n".join([f"Topic: {row['question']} -> Info: {row['answer']}" for row in db_res.data])
 
-        # 3. Strict & Short AI Prompt
+        # 3. AI Processing with Contextual Priority
         llm = get_llm()
-        # Humne max_tokens=150 set kiya hai taake lamba jawab mumkin hi na ho
-        llm.max_tokens = 150 
+        llm.max_tokens = 100 # Response ki length control karne ke liye
         
         prompt = ChatPromptTemplate.from_template("""
-        You are ZT Hosting Support. Be direct, professional, and very brief.
+        You are ZT Hosting Support. 
         
-        STRICT RULES:
-        1. NO greetings like "Hello", "I'd be happy to help", or "Thank you for reaching out".
-        2. Give the answer in ONLY 1-3 short sentences.
-        3. Use information from 'DATABASE INFO' if the topic matches. Otherwise use 'FILE CONTEXT'.
-        4. Use **bold** for prices and plan names.
-        5. If the question is irrelevant, say ONLY: "Sorry, I am here to provide information about ZT Hosting only."
+        TASK:
+        - Use 'DATABASE KNOWLEDGE' to answer if the user's intent matches any topic there. 
+        - If not in DB, use 'FILE CONTEXT'.
+        - Enhance the answer to be professional but keep it to ONLY 1-2 sentences.
+        - NEVER use greetings like "Hello" or "I'd be happy to help".
+        - Use **bold** for prices.
 
-        DATABASE INFO: {db_info}
-        FILE CONTEXT: {file_info}
+        DATABASE KNOWLEDGE:
+        {db_info}
+
+        FILE CONTEXT:
+        {file_info}
+
         USER QUESTION: {input}
-        
         ANSWER:""")
 
         file_context = DATA_PATH.read_text(encoding="utf-8")[:3000] if DATA_PATH.exists() else ""

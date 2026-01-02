@@ -2877,7 +2877,6 @@ async def debug_paths():
 
 # update the code to prevent from sorry i dont have this information
 
-
 @app.post("/ask")
 async def ask_bot(request: Request):
     try:
@@ -2888,28 +2887,28 @@ async def ask_bot(request: Request):
 
         llm = get_llm()
 
-        # 1. Database Check (Keeping your existing logic)
+        # 1. Database Check (Manual FAQs)
         db_res = supabase.table("manual_faqs").select("question, answer").execute()
         for row in db_res.data:
-            if row['question'].lower() in user_input.lower() or user_input.lower() in row['question'].lower():
+            if row['question'].lower() in user_input.lower():
                 return {"answer": row['answer']}
 
-        # 2. File Context Check
+        # 2. Optimized File Context Check
         if not DATA_PATH.exists():
             return {"answer": "System error: Knowledge base file is missing."}
         
-        # Increased limit to 15000 to cover all Reseller tables
-        context_text = DATA_PATH.read_text(encoding="utf-8")[:15000] 
+        # Reduced to 10,000 for faster processing while keeping all tables
+        context_text = DATA_PATH.read_text(encoding="utf-8")[:10000] 
 
-        # 3. AI Processing with STRICT accuracy instructions
+        # 3. Enhanced Instructions for Speed and Accuracy
         system_prompt = (
-            "You are ZT Hosting Support assistant. "
-            "Your task is to provide 100% accurate information based ONLY on the provided context. "
-            "IMPORTANT: Carefully scan the 'Select Your Plan' tables for prices and features. "
-            "Note that plans like 'Reseller-1' have a $1 first-month price and a different renewal price in PKR. "
-            "Always prioritize technical data from tables over general paragraph text. "
-            "If the answer is not in the context, say 'I am sorry, I don't have this information yet.' "
-            "Always use **bold** for pricing and keep answers concise."
+            "You are ZT Hosting Support assistant. Provide detailed and accurate answers. "
+            "PRIORITY RULE: Always use prices from the 'Select Your Plan' tables. "
+            "If a plan has a first-month price (e.g., $1) and a renewal price (e.g., PKR 2570), mention BOTH clearly. "
+            "For example: 'Reseller-1 is **$1** for the first month and renews at **PKR 2570**.' "
+            "Do not give one-word answers; explain the features like cPanel accounts and storage if asked about a plan. "
+            "Use **bold** for all prices, plan names, and key features. "
+            "If the information is not in the context, say 'I am sorry, I don't have this information yet.'"
         )
         
         prompt = ChatPromptTemplate.from_messages([
@@ -2918,7 +2917,7 @@ async def ask_bot(request: Request):
         ])
 
         chain = prompt | llm
-        # Passing 15000 characters ensures the AI sees the full Reseller table at the end
+        # Invoke with optimized context for faster response
         response = chain.invoke({"context": context_text, "input": user_input})
         
         return {"answer": response.content.strip()}

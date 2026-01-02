@@ -2828,7 +2828,55 @@ async def debug_paths():
         }
     }
 
-# --- AI & Main Routes ---
+# # --- AI & Main Routes ---
+
+# @app.post("/ask")
+# async def ask_bot(request: Request):
+#     try:
+#         data = await request.json()
+#         user_input = data.get("message", "").strip()
+#         if not user_input:
+#             return {"answer": "Aapka sawal kya hai?"}
+
+#         llm = get_llm()
+
+#         # 1. Database Check
+#         db_res = supabase.table("manual_faqs").select("question, answer").execute()
+#         for row in db_res.data:
+#             if row['question'].lower() in user_input.lower() or user_input.lower() in row['question'].lower():
+#                 return {"answer": row['answer']}
+
+#         # 2. File Context Check
+#         if not DATA_PATH.exists():
+#             return {"answer": "System error: My knowledge base file is missing."}
+        
+#         context_text = DATA_PATH.read_text(encoding="utf-8")
+
+#         # 3. AI Processing
+#         system_prompt = (
+#             "You are ZT Hosting Support assistant. "
+#             "Use the provided context to answer questions. "
+#             "If the answer is not in context, say 'I am sorry, I don't have this information yet.' "
+#             "Always use **bold** for pricing and keep answers short."
+#         )
+        
+#         prompt = ChatPromptTemplate.from_messages([
+#             ("system", system_prompt),
+#             ("user", "Context: {context}\n\nQuestion: {input}")
+#         ])
+
+#         chain = prompt | llm
+#         # Change 2: Increased Context limit to 10k
+#         response = chain.invoke({"context": context_text[:10000], "input": user_input})
+        
+#         return {"answer": response.content.strip()}
+
+#     except Exception as e:
+#         return {"answer": f"System Error: {str(e)}"}
+
+
+# update the code to prevent from sorry i dont have this information
+
 
 @app.post("/ask")
 async def ask_bot(request: Request):
@@ -2840,7 +2888,7 @@ async def ask_bot(request: Request):
 
         llm = get_llm()
 
-        # 1. Database Check
+        # 1. Database Check (Keeping your existing logic)
         db_res = supabase.table("manual_faqs").select("question, answer").execute()
         for row in db_res.data:
             if row['question'].lower() in user_input.lower() or user_input.lower() in row['question'].lower():
@@ -2848,16 +2896,20 @@ async def ask_bot(request: Request):
 
         # 2. File Context Check
         if not DATA_PATH.exists():
-            return {"answer": "System error: My knowledge base file is missing."}
+            return {"answer": "System error: Knowledge base file is missing."}
         
-        context_text = DATA_PATH.read_text(encoding="utf-8")
+        # Increased limit to 15000 to cover all Reseller tables
+        context_text = DATA_PATH.read_text(encoding="utf-8")[:15000] 
 
-        # 3. AI Processing
+        # 3. AI Processing with STRICT accuracy instructions
         system_prompt = (
             "You are ZT Hosting Support assistant. "
-            "Use the provided context to answer questions. "
-            "If the answer is not in context, say 'I am sorry, I don't have this information yet.' "
-            "Always use **bold** for pricing and keep answers short."
+            "Your task is to provide 100% accurate information based ONLY on the provided context. "
+            "IMPORTANT: Carefully scan the 'Select Your Plan' tables for prices and features. "
+            "Note that plans like 'Reseller-1' have a $1 first-month price and a different renewal price in PKR. "
+            "Always prioritize technical data from tables over general paragraph text. "
+            "If the answer is not in the context, say 'I am sorry, I don't have this information yet.' "
+            "Always use **bold** for pricing and keep answers concise."
         )
         
         prompt = ChatPromptTemplate.from_messages([
@@ -2866,8 +2918,8 @@ async def ask_bot(request: Request):
         ])
 
         chain = prompt | llm
-        # Change 2: Increased Context limit to 10k
-        response = chain.invoke({"context": context_text[:10000], "input": user_input})
+        # Passing 15000 characters ensures the AI sees the full Reseller table at the end
+        response = chain.invoke({"context": context_text, "input": user_input})
         
         return {"answer": response.content.strip()}
 

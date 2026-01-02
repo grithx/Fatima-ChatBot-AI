@@ -21,7 +21,7 @@ class ResponseFormatter:
         # Standalone patterns
         r"As an AI(?:\s+(?:assistant|model|language model))?[,\s]+",
         r"I can help(?:\s+you)?(?:\s+with that)?\.?\s*",
-        r"Here (?:are|is) some[,\s]+",
+        r"Here (?:are|is) some(?:\s+(?:details|information))?(?:\s+about)?[,\s]+",
         r"Based on your request[,\s]+",
         r"Let me (?:help|assist)(?:\s+you)?(?:\s+with that)?\.?\s*",
         r"I'm (?:here|glad) to (?:help|assist)(?:\s+you)?[,\s]+",
@@ -40,9 +40,9 @@ class ResponseFormatter:
     
     # Apology patterns
     APOLOGY_PATTERNS = [
-        r"I (?:am )?sorry[,\s]+",
-        r"I apologize[,\s]+",
-        r"Apologies[,\s]+",
+        r"I (?:am )?sorry(?:\s+for any confusion)?[,.\s]+",
+        r"I apologize(?:\s+for any confusion)?[,.\s]+",
+        r"Apologies(?:\s+for any confusion)?[,.\s]+",
     ]
     
     # URL/hyperlink pattern
@@ -77,23 +77,26 @@ class ResponseFormatter:
         if not response or not response.strip():
             return response
         
-        # Step 1: Remove marketing fluff
-        response = self._remove_marketing_fluff(response)
-        
-        # Step 2: Handle greetings based on style
+        # Step 1: Handle greetings based on style (do this first to avoid fragments)
         response = self._handle_greetings(response, user_input)
         
-        # Step 3: Remove apologies if short style
+        # Step 2: Remove apologies if short style
         if self.style == "short":
             response = self._remove_apologies(response)
+        
+        # Step 3: Remove marketing fluff
+        response = self._remove_marketing_fluff(response)
         
         # Step 4: Remove hyperlinks if not requested
         response = self._handle_hyperlinks(response, user_input)
         
-        # Step 5: Prioritize pricing/policy sentences
+        # Step 5: Clean up early to avoid working with fragments
+        response = self._clean_response(response)
+        
+        # Step 6: Prioritize pricing/policy sentences
         response = self._prioritize_key_sentences(response)
         
-        # Step 6: Limit sentences based on style
+        # Step 7: Limit sentences based on style
         response = self._limit_sentences(response)
         
         # Step 7: Clean up extra whitespace and formatting
@@ -164,6 +167,15 @@ class ResponseFormatter:
         if len(sentences) <= 1:
             return text
         
+        # Check if first sentence is a greeting (for conversational mode)
+        first_is_greeting = False
+        if sentences:
+            first_lower = sentences[0].lower()
+            for pattern in self.BOT_GREETING_PATTERNS:
+                if re.match(pattern, sentences[0], flags=re.IGNORECASE):
+                    first_is_greeting = True
+                    break
+        
         # Find first sentence with pricing or policy keywords
         key_sentence_idx = None
         for i, sentence in enumerate(sentences):
@@ -175,10 +187,15 @@ class ResponseFormatter:
                 key_sentence_idx = i
                 break
         
-        # Move key sentence to first position if found and not already first
+        # Move key sentence to appropriate position
         if key_sentence_idx and key_sentence_idx > 0:
             key_sentence = sentences.pop(key_sentence_idx)
-            sentences.insert(0, key_sentence)
+            # If first sentence is a greeting we're keeping, insert after it
+            if first_is_greeting and self.style == "conversational":
+                sentences.insert(1 if len(sentences) > 0 else 0, key_sentence)
+            else:
+                # Otherwise, make it first
+                sentences.insert(0, key_sentence)
         
         return " ".join(sentences)
     

@@ -21,7 +21,7 @@ class ResponseFormatter:
         # Standalone patterns
         r"As an AI(?:\s+(?:assistant|model|language model))?[,\s]+",
         r"I can help(?:\s+you)?(?:\s+with that)?\.?\s*",
-        r"Here (?:are|is) some(?:\s+(?:details|information))?(?:\s+about)?[,\s]+",
+        r"Here (?:are|is) some(?:\s+(?:details|information))?(?:\s+about)?\.?\s*",
         r"Based on your request[,\s]+",
         r"Let me (?:help|assist)(?:\s+you)?(?:\s+with that)?\.?\s*",
         r"I'm (?:here|glad) to (?:help|assist)(?:\s+you)?[,\s]+",
@@ -38,11 +38,12 @@ class ResponseFormatter:
         r"^(?:Hi|Hello|Hey|Greetings|Good\s+(?:morning|afternoon|evening|day))(?:\s+there)?[,!\s]+",
     ]
     
-    # Apology patterns
+    # Apology patterns (include common follow-up phrases)
     APOLOGY_PATTERNS = [
-        r"I (?:am )?sorry(?:\s+for any confusion)?[,.\s]+",
+        r"I (?:am )?sorry(?:\s+if there's any confusion)?[,.\s]+",
         r"I apologize(?:\s+for any confusion)?[,.\s]+",
         r"Apologies(?:\s+for any confusion)?[,.\s]+",
+        r"if there's any confusion[,.\s]+",  # Catch leftover fragments
     ]
     
     # URL/hyperlink pattern

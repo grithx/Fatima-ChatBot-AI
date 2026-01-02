@@ -2491,29 +2491,28 @@ async def ask_bot(request: Request):
         data = await request.json()
         user_input = data.get("message", "").strip()
         
-        # 1. Strict Keyword Shield (For Off-topic)
-        hosting_keywords = ["hosting", "server", "domain", "plan", "price", "ssd", "zt", "support", "gold", "refund", "email", "cost", "buy"]
-        if not any(word in user_input.lower() for word in hosting_keywords) and len(user_input) > 3:
-            return {"answer": "Sorry, I am here to provide information about ZT Hosting only."}
-
-        # 2. Database Fetch for Context
+        # 1. Database se saara data uthayein (Context ke liye)
         db_res = supabase.table("manual_faqs").select("question, answer").execute()
         db_context = ""
         if db_res.data:
-            db_context = "DATABASE KNOWLEDGE:\n" + "\n".join([f"Topic: {row['question']} -> Info: {row['answer']}" for row in db_res.data])
+            db_context = "DATABASE KNOWLEDGE:\n" + "\n".join([f"Q: {row['question']} A: {row['answer']}" for row in db_res.data])
 
-        # 3. AI Processing with Contextual Priority
+        # 2. AI ko Decision Maker banayein (Keywords ki zaroorat khatam)
         llm = get_llm()
-        llm.max_tokens = 100 # Response ki length control karne ke liye
+        llm.max_tokens = 120
         
+        # Is prompt mein hum AI ko pehle sawal parakhne ka keh rahe hain
         prompt = ChatPromptTemplate.from_template("""
-        You are ZT Hosting Support. 
+        You are an AI Gatekeeper and Support Agent for ZT Hosting.
+
+        STEP 1: Analyze if the user's question is related to web hosting, domains, servers, billing, refunds, or ZT Hosting services.
+        STEP 2: If NOT related (e.g., jokes, general knowledge, sports), reply ONLY: "Sorry, I am here to provide information about ZT Hosting only."
+        STEP 3: If RELATED, find the best answer from 'DATABASE KNOWLEDGE' or 'FILE CONTEXT'.
         
-        TASK:
-        - Use 'DATABASE KNOWLEDGE' to answer if the user's intent matches any topic there. 
-        - If not in DB, use 'FILE CONTEXT'.
-        - Enhance the answer to be professional but keep it to ONLY 1-2 sentences.
-        - NEVER use greetings like "Hello" or "I'd be happy to help".
+        RULES:
+        - Be concise (1-2 sentences).
+        - No greetings (No Hello/Hi).
+        - Enhance DB answers to be professional.
         - Use **bold** for prices.
 
         DATABASE KNOWLEDGE:
@@ -2527,6 +2526,7 @@ async def ask_bot(request: Request):
 
         file_context = DATA_PATH.read_text(encoding="utf-8")[:3000] if DATA_PATH.exists() else ""
         
+        # AI ab khud context aur intent ko match karega
         response = llm.invoke(prompt.format(
             db_info=db_context, 
             file_info=file_context, 
@@ -2536,7 +2536,7 @@ async def ask_bot(request: Request):
         return {"answer": response.content.strip()}
 
     except Exception as e:
-        return {"answer": "I am having trouble processing that. Please try again."}
+        return {"answer": "I'm sorry, I'm having trouble connecting. Please try again."}
 @app.get("/", response_class=HTMLResponse)
 async def get_home():
     if HTML_PATH.exists(): return HTML_PATH.read_text(encoding="utf-8")

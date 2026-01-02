@@ -2772,7 +2772,6 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 import requests
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.runnables import RunnablePassthrough
 from supabase import create_client, Client
 from response_formatter import ResponseFormatter
 from output_parser import FormattedOutputParser

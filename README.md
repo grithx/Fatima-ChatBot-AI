@@ -27,8 +27,11 @@ ZT Hosting Chatbot is a professional customer support solution that provides ins
 
 ### Admin Features
 - **Secure Login**: reCAPTCHA-protected admin authentication
-- **FAQ Management**: Add, edit custom FAQs through admin panel
-- **Database Priority**: Manual FAQs take precedence over AI responses
+- **FAQ CRUD Operations**: Full Create, Read, Update, Delete functionality for FAQs
+- **Response Style Control**: Toggle between short/professional and conversational responses
+- **Priority Rules**: Configure database-first or AI-supplement modes
+- **Context Size Settings**: Adjustable context window (2000/4000/6000 characters)
+- **Modern Dashboard**: Tab-based interface with real-time updates
 - **Session Management**: Secure cookie-based authentication
 
 ### Technical Features
@@ -122,16 +125,35 @@ RECAPTCHA_SECRET_KEY=your_recaptcha_secret_key
 ```
 
 ### Step 5: Set Up Supabase Database
-Create a table named `manual_faqs`:
+
+#### Create Required Tables
+
+Run these SQL commands in your Supabase SQL editor:
 
 ```sql
+-- Create manual_faqs table
 CREATE TABLE manual_faqs (
   id BIGSERIAL PRIMARY KEY,
   question TEXT NOT NULL,
   answer TEXT NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
 );
+
+-- Create bot_settings table
+CREATE TABLE bot_settings (
+  id BIGSERIAL PRIMARY KEY,
+  response_style TEXT NOT NULL DEFAULT 'short',
+  priority TEXT NOT NULL DEFAULT 'database_first',
+  context_size INTEGER NOT NULL DEFAULT 4000,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+);
+
+-- Insert default settings
+INSERT INTO bot_settings (response_style, priority, context_size)
+VALUES ('short', 'database_first', 4000);
 ```
+
+**Note**: For detailed admin dashboard setup instructions, see [ADMIN_SETUP.md](ADMIN_SETUP.md)
 
 ## 💻 Usage
 
@@ -165,6 +187,32 @@ python crawler.py
 ```bash
 python ingest.py
 ```
+
+### Using the Admin Dashboard
+
+1. **Access Login Page**
+   ```
+   http://localhost:8000/login
+   ```
+
+2. **Login with Credentials**
+   - Enter your admin username and password
+   - Complete reCAPTCHA verification
+
+3. **Manage FAQs**
+   - **Add**: Fill in question and answer, click "Add FAQ"
+   - **View**: Click "Refresh List" to see all FAQs
+   - **Edit**: Click "Edit" button on any FAQ
+   - **Delete**: Click "Delete" button with confirmation
+
+4. **Configure Bot Settings**
+   - Switch to "Bot Settings" tab
+   - Choose response style (Short or Conversational)
+   - Set priority mode (Database First or AI Supplement)
+   - Adjust context window size
+   - Click "Save Settings"
+
+**For detailed admin features, see [ADMIN_SETUP.md](ADMIN_SETUP.md)**
 
 ## 🌐 Deployment
 
@@ -239,6 +287,61 @@ Add manual FAQ (requires authentication)
 }
 ```
 
+#### `GET /get-faqs`
+List all FAQs (requires authentication)
+```json
+Response:
+{
+  "status": "success",
+  "faqs": [
+    {"id": 1, "question": "...", "answer": "..."},
+    ...
+  ]
+}
+```
+
+#### `PUT /update-faq`
+Update existing FAQ (requires authentication)
+```json
+{
+  "id": 1,
+  "question": "Updated question?",
+  "answer": "Updated answer..."
+}
+```
+
+#### `DELETE /delete-faq`
+Delete FAQ (requires authentication)
+```json
+{
+  "id": 1
+}
+```
+
+#### `GET /get-settings`
+Get current bot settings (requires authentication)
+```json
+Response:
+{
+  "status": "success",
+  "settings": {
+    "response_style": "short",
+    "priority": "database_first",
+    "context_size": 4000
+  }
+}
+```
+
+#### `POST /save-settings`
+Update bot settings (requires authentication)
+```json
+{
+  "response_style": "conversational",
+  "priority": "ai_supplement",
+  "context_size": 6000
+}
+```
+
 #### `GET /logout`
 Logout admin session
 
@@ -247,16 +350,19 @@ Logout admin session
 ### Question Processing Flow
 
 1. **User Input**: Question received via `/ask` endpoint
-2. **Database Check**: Searches manual FAQs in Supabase
-3. **File Routing**: Identifies relevant knowledge base file based on keywords:
+2. **Load Settings**: Retrieves bot configuration from Supabase (response style, priority mode, context size)
+3. **Database Check**: Searches manual FAQs in Supabase
+   - **Database First Mode**: Returns immediately if FAQ matches
+   - **AI Supplement Mode**: Collects FAQ context to combine with AI
+4. **File Routing**: Identifies relevant knowledge base file based on keywords:
    - "reseller" → `reseller_hosting.txt`
    - "domain" → `domain_registration.txt`
    - "vps" → `pro_vps_hosting.txt`
    - "wordpress" → `pro_wordpress_hosting.txt`
    - etc.
-4. **Context Loading**: Loads relevant file content (limited to 4000 characters)
-5. **AI Processing**: Sends to Groq LLM with specialized prompt
-6. **Response Formatting**: Returns formatted answer with bold pricing
+5. **Context Loading**: Loads relevant file content (dynamic size from settings)
+6. **AI Processing**: Sends to Groq LLM with style-specific prompt
+7. **Response Formatting**: Returns formatted answer with bold pricing
 
 ### Key Technologies
 
@@ -278,7 +384,8 @@ Other options:
 
 ### Context Limits
 - Default: 4000 characters per query
-- Adjustable in `api/app.py` line 2973
+- Adjustable via Admin Dashboard: 2000/4000/6000 characters
+- Setting is applied dynamically on each request
 
 ### Temperature Setting
 - Current: 0.1 (more deterministic and factual responses, reduces randomness and hallucinations)

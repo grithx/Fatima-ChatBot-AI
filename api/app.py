@@ -2877,56 +2877,127 @@ async def debug_paths():
 
 # update the code to prevent from sorry i dont have this information
 
+# @app.post("/ask")
+# async def ask_bot(request: Request):
+#     try:
+#         data = await request.json()
+#         user_input = data.get("message", "").strip()
+#         if not user_input:
+#             return {"answer": "Aapka sawal kya hai?"}
+
+#         # --- STEP 1: DATABASE CHECK FIRST ---
+#         # Hum database se saare FAQs nikal kar check karenge
+#         db_res = supabase.table("manual_faqs").select("question, answer").execute()
+        
+#         for row in db_res.data:
+#             # Check agar user ka sawal DB ke kisi sawal se match karta hai
+#             if row['question'].lower() in user_input.lower() or user_input.lower() in row['question'].lower():
+#                 # Agar DB mein mil jaye toh yahin se jawab de dein (No AI needed)
+#                 return {"answer": row['answer']}
+
+#         # --- STEP 2: FILE & AI PROCESSING (Agar DB mein jawab na mile) ---
+#         llm = get_llm()
+
+#         if not DATA_PATH.exists():
+#             return {"answer": "System error: Knowledge base file is missing."}
+        
+#         # Optimized context for speed
+#         context_text = DATA_PATH.read_text(encoding="utf-8")[:10000]
+
+#         system_prompt = (
+#             "You are ZT Hosting Support assistant. "
+#             "Priority: Use the tables in the context for pricing. "
+#             "Mention both first-month and renewal prices if available. "
+#             "If information is not in context, say 'I am sorry, I don't have this information yet.' "
+#             "Use **bold** for prices and plan names."
+#         )
+        
+#         prompt = ChatPromptTemplate.from_messages([
+#             ("system", system_prompt),
+#             ("user", "Context: {context}\n\nQuestion: {input}")
+#         ])
+
+#         chain = prompt | llm
+#         response = chain.invoke({"context": context_text, "input": user_input})
+        
+#         return {"answer": response.content.strip()}
+
+#     except Exception as e:
+#         # Rate limit handling
+#         if "429" in str(e):
+#             return {"answer": "System is busy. Please try again in 10 minutes."}
+#         return {"answer": f"System Error: {str(e)}"}
+
+
 @app.post("/ask")
 async def ask_bot(request: Request):
     try:
         data = await request.json()
-        user_input = data.get("message", "").strip()
+        user_input = data.get("message", "").lower().strip()
         if not user_input:
             return {"answer": "Aapka sawal kya hai?"}
 
-        # --- STEP 1: DATABASE CHECK FIRST ---
-        # Hum database se saare FAQs nikal kar check karenge
+        # --- STEP 1: DATABASE CHECK (Sabse pehle aur fast) ---
         db_res = supabase.table("manual_faqs").select("question, answer").execute()
-        
         for row in db_res.data:
-            # Check agar user ka sawal DB ke kisi sawal se match karta hai
-            if row['question'].lower() in user_input.lower() or user_input.lower() in row['question'].lower():
-                # Agar DB mein mil jaye toh yahin se jawab de dein (No AI needed)
+            if row['question'].lower() in user_input:
                 return {"answer": row['answer']}
 
-        # --- STEP 2: FILE & AI PROCESSING (Agar DB mein jawab na mile) ---
-        llm = get_llm()
-
-        if not DATA_PATH.exists():
-            return {"answer": "System error: Knowledge base file is missing."}
+        # --- STEP 2: SMART FILE ROUTING (Accuracy ke liye) ---
+        # Default file agar kuch match na ho
+        file_name = "shared_webhosting.txt" 
         
-        # Optimized context for speed
-        context_text = DATA_PATH.read_text(encoding="utf-8")[:10000]
+        # User ke keywords dekh kar file select karein
+        if "reseller" in user_input:
+            file_name = "reseller_hosting.txt"
+        elif any(x in user_input for x in ["domain", ".pk", ".com", "register"]):
+            file_name = "domain_registration.txt"
+        elif "vps" in user_input:
+            file_name = "pro_vps_hosting.txt"
+        elif "business" in user_input:
+            file_name = "pro_hosting_business_web.txt"
+        elif "wordpress" in user_input:
+            file_name = "pro_wordpress_hosting.txt"
+        elif "email" in user_input:
+            file_name = "pro_email_hosting.txt"
+        elif "dedicated" in user_input:
+            file_name = "pro_dedicated_servers.txt"
+        elif "promo" in user_input or "offer" in user_input:
+            file_name = "promo_packages.txt"
 
+        target_path = BASE_DIR / "data" / file_name
+        
+        # Backup check agar specific file na mile
+        if not target_path.exists():
+            target_path = DATA_PATH # purani main file
+            
+        context_text = target_path.read_text(encoding="utf-8")
+
+        # --- STEP 3: AI PROCESSING (Small context = Fast Response) ---
+        llm = get_llm()
         system_prompt = (
-            "You are ZT Hosting Support assistant. "
-            "Priority: Use the tables in the context for pricing. "
-            "Mention both first-month and renewal prices if available. "
-            "If information is not in context, say 'I am sorry, I don't have this information yet.' "
-            "Use **bold** for prices and plan names."
+            "You are ZT Hosting Support assistant. Answer ONLY based on the provided context. "
+            "PRIORITY: For pricing, strictly use Markdown tables. "
+            "Always mention first-month price (e.g. $1) AND renewal price (e.g. PKR 2570) if present. "
+            "Use **bold** for prices, plan names, and key features. "
+            "If info is not in context, say 'I am sorry, I don't have this information yet.'"
         )
         
         prompt = ChatPromptTemplate.from_messages([
             ("system", system_prompt),
-            ("user", "Context: {context}\n\nQuestion: {input}")
+            ("user", f"Context: {context_text}\n\nQuestion: {user_input}")
         ])
 
         chain = prompt | llm
-        response = chain.invoke({"context": context_text, "input": user_input})
+        response = chain.invoke({"input": user_input})
         
         return {"answer": response.content.strip()}
 
     except Exception as e:
-        # Rate limit handling
         if "429" in str(e):
-            return {"answer": "System is busy. Please try again in 10 minutes."}
+            return {"answer": "Bot is busy (Rate Limit). Please wait 10-15 minutes."}
         return {"answer": f"System Error: {str(e)}"}
+
 
 # --- Routes for UI (Baqi routes same rahenge) ---
 @app.get("/", response_class=HTMLResponse)

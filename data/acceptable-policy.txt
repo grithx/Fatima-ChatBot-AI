@@ -1,0 +1,170 @@
+[Skip to content](https://zthosting.com/acceptable-use-policy/#content)
+
+- ![](https://zthosting.com/wp-content/themes/zthosting/assets/images/envalop.png)[info(at)zthosting(dot)com](mailto:info(at)zthosting(dot)com)
+- ![](https://zthosting.com/wp-content/themes/zthosting/assets/images/phone.png)03 111 04 5555
+
+- [Promo](https://zthosting.com/promo-packages/ "Promo")
+- [Blog](https://zthosting.com/blog/ "Blog")
+- [Contact Us](https://zthosting.com/contact-us/ "Contact Us")
+- [Client Area](https://my.zthosting.com/clientarea.php "Client Area")
+
+[![](https://zthosting.com/wp-content/uploads/logo-zthosting-lite.png)](https://zthosting.com/)
+
+- [Shared Web Hosting](https://zthosting.com/web-hosting/ "Shared Web Hosting")
+- [PRO Hosting](https://zthosting.com/acceptable-use-policy/# "PRO Hosting")
+  - [Business Web Hosting](https://zthosting.com/business-web-hosting/ "Business Web Hosting")
+  - [Best WordPress Hosting](https://zthosting.com/best-wordpress-hosting/ "Best WordPress Hosting")
+  - [Fully Managed VPS](https://zthosting.com/vps-hosting/ "Fully Managed VPS")
+  - [Business E-mail Hosting](https://zthosting.com/e-mail-hosting/ "Business E-mail Hosting")
+  - [Managed Dedicated Server](https://zthosting.com/managed-dedicated-server/ "Managed Dedicated Server")
+- [Reseller Hosting](https://zthosting.com/reseller-hosting/ "Reseller Hosting")
+- [Domain Registration](https://zthosting.com/domain-registration/ "Domain Registration")
+
+# Acceptable Usage Policy
+
+## Acceptable Use Policy, ZtHosting
+
+### Zero Tolerance Hosting
+
+This Acceptable Use Policy (“AUP”) governs your use of the Services and is incorporated by reference into our [Terms of Service](https://zthosting.com/terms-conditions/). Unless otherwise stated, defined terms in this AUP have the meanings provided to them in the Terms of Service. We may modify this AUP at any time without notice.
+
+You shall use the Services only for lawful purposes. Transmission, storage, or display of any information, data, or material in violation of applicable laws or regulations, especially of the laws of Pakistan, is prohibited. We reserve the right to terminate the Services for any Customer that exposes the Company to legal liability or threatens its ability to provide services to other customers. You agree to indemnify and hold the Company harmless from any claims resulting from your use of the Services.
+
+1. ## 1\. Prohibited Uses
+
+1. ### No Illegal or Harmful Use
+
+
+      – You may not use the Services to publish content or engage in activity that is harmful to others or illegal under the applicable law, including without limitation in connection with any of the following illegal, harmful or fraudulent activities:
+
+
+      – Disclosing private sensitive personal information about others;
+
+
+      – Distributing malware or other malicious code;
+
+
+      – Engaging in the unlawful distribution of controlled substances and drug contraband;
+
+
+      – Engaging in the unlawful distribution of prescription medications, including, but not limited to, promotion, marketing, or sale of prescription medications without a valid prescription;
+
+
+      – Gambling;
+
+      – Hosting pornography or content that is potentially pornographic (Any website found to be hosting pornography or linking to pornography will be suspended immediately without notice and reported to law enforcement;
+
+
+      – Hosting FOREX, E-Gold Exchange, Second Life/Linden Exchange, Ponzi, MLM/Pyramid Scheme, High-Yield Interest Programs (HYIP) or related sites;
+
+
+      – Hosting or linking to a website intended to deceive the public including, but not limited to sites listed at [aa419.org](https://aa419.org/) & escrow-fraud.com;
+
+      – Hosting or linking to an anonymous proxy server;
+
+
+      – Infringing upon the Intellectual Property Rights of Others. This includes, but is not limited to, the unauthorized copying or distribution of movies, music, books, photographs, software/warez, or any other copyrighted work;
+
+      – Money laundering;
+
+
+      – Any material that is against Islamic beliefs
+
+
+      – Any politically inciteful material as determined by the Pakistan Penal Code
+
+
+      – Any material that causes racism, sexism or divisions in society
+
+
+      – Phishing or engaging in identity theft; and
+
+
+      – Selling weapons or ammunition.
+
+2. ### No Unauthorized System Access or Network Abuse
+
+
+      -Accessing another network without permission, to probe or scan for vulnerabilities or breach security or authentication measures;
+
+
+      – Attacking other networks (i.e. Denial of Service (DoS) attacks);
+
+
+      – Intercepting or monitoring data without permission;
+
+
+      – Running a file-sharing site;
+
+
+      – Running any software that interfaces with an IRC (Internet Relay Chat) network;
+
+      – Using any deep-link, page-scrape, robot, crawl, index, spider, offline reader, click spam, macro programs, internet agent, or other automatic device, program, algorithm or methodology which does the same things, to use, access, copy, index, acquire information, generate impressions or clicks, input information, store information, search, generate searches, or monitor any portion of our website or servers for any unauthorized purpose;
+
+#### 2\. Zero Tolerance Hosting Spam Policy
+
+1. You may not use the Services to send spam or bulk unsolicited messages. We maintain a zero-tolerance policy for use of its network or services in any manner associated with the transmission, distribution or delivery of any bulk e-mail, including unsolicited bulk or unsolicited commercial e-mail, or the sending, assisting, or commissioning the transmission of commercial e-mails.“Safe lists,” purchased lists, and selling of lists will be treated as SPAM. We may terminate the account of any User who sends out SPAM with or without notice. Websites advertised via SPAM (i.e. Spamvertised) may not be hosted on our servers. This provision includes, but is not limited to, SPAM sent via fax, phone, postal mail, email, instant messaging, or usenet/newsgroups. Any User account which results in our IP space being blacklisted will be immediately suspended and/or terminated.
+
+#### 3\. Defamation and Objectionable Content
+
+We value the freedom of expression and encourage Users to be respectful of the content they post.  As a web host, we are not a publisher of User content and generally not in a position to investigate the veracity of individual defamation claims or to determine whether certain material, which we may find objectionable, should be censored.  Accordingly, we generally require a court order from a court of competent jurisdiction.  However, we reserve the right to disable or remove any content to prevent harm to others or to the Company, as determined in our sole discretion.
+
+#### 4.Enforcement4
+
+1. **Resellers** If there is a violation of this AUP by a User of a Reseller, we will suspend the account in question and notify the Reseller so that the Reseller can address the matter with the User. The occurrence of additional violations on a User account may result in the immediate suspensions or termination of your Reseller account.
+2. **Direct customers.** Your Services may be terminated with or without notice upon any violation of this AUP. If applicable, violations will be reported to the appropriate law enforcement agency. We reserve the right to enforce, or not enforce, this AUP in our sole discretion.
+
+#### 5.Reporting Violation of this AUP
+
+If you feel you have discovered a violation of our AUP please contact us at
+
+[abuse@ZtHosting.com](mailto:%61bu%73e@h%6Fsterp%6B.com)
+
+Page Content
+
+[Toggle](https://zthosting.com/acceptable-use-policy/#)
+
+- [Acceptable Usage Policy](https://zthosting.com/acceptable-use-policy/#Acceptable_Usage_Policy)
+  - [Acceptable Use Policy, ZtHosting](https://zthosting.com/acceptable-use-policy/#Acceptable_Use_Policy_ZtHosting)
+    - [Zero Tolerance Hosting](https://zthosting.com/acceptable-use-policy/#Zero_Tolerance_Hosting)
+  - [1\. Prohibited Uses](https://zthosting.com/acceptable-use-policy/#1_Prohibited_Uses)
+    - [No Illegal or Harmful Use](https://zthosting.com/acceptable-use-policy/#No_Illegal_or_Harmful_Use)
+    - [No Unauthorized System Access or Network Abuse](https://zthosting.com/acceptable-use-policy/#No_Unauthorized_System_Access_or_Network_Abuse)
+
+[Back To Top](https://zthosting.com/acceptable-use-policy/#top "Go to the top of the page")
+
+![Acceptable Use Policy | Best Web Hosting in Pakistan](https://zthosting.com/wp-content/uploads/logo-zthosting-lite.png)
+
+Founded in a call center room at Islamabad [Pakistan](https://en.wikipedia.org/wiki/Pakistan), ZtHosting has grown into a leading provider of Shared, Reseller, VPS, and Dedicated web hosting.
+
+### Let's Work
+
+- [Web Hosting in Pakistan – Best Web Hosting – ZTHosting](https://zthosting.com/)
+- [Business Web Hosting](https://zthosting.com/business-web-hosting/)
+- [WordPress Hosting](https://zthosting.com/best-wordpress-hosting/)
+- [Reseller Hosting](https://zthosting.com/reseller-hosting/)
+- [VPS Hosting](https://zthosting.com/vps-hosting/)
+- [Dedicated Server](https://zthosting.com/managed-dedicated-server/)
+- [Business E-mail Hosting](https://zthosting.com/e-mail-hosting/)
+- [Domain Registration](https://zthosting.com/domain-registration/)
+- [Promo Packages](https://zthosting.com/promo-packages/)
+
+### Support
+
+- [Client Area](https://my.zthosting.com/clientarea.php)
+- [Submit A Ticket](https://my.zthosting.com/submitticket.php)
+- [Contact Us](https://zthosting.com/contact-us/)
+- [About](https://zthosting.com/about-us/)
+- [Acceptable Use Policy](https://zthosting.com/acceptable-use-policy/)
+- [Privacy Policy](https://zthosting.com/privacy-policy/)
+- [Terms & Conditions](https://zthosting.com/terms-conditions/)
+
+### Get In Touch
+
+- Address: Office# 202, 2nd Floor Chenab Center Blue Area Islamabad, 44000 Pakistan
+- Email: [info(at)zthosting(dot)com](mailto:info(at)zthosting(dot)com)
+- Phone: 03 111 04 5555
+
+Available
+
+![Chat attention grabber](https://embed.tawk.to/_s/v4/assets/images/attention-grabbers/42-br.svg)

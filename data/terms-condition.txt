@@ -1,0 +1,233 @@
+[Skip to content](https://zthosting.com/terms-conditions/#content)
+
+- ![](https://zthosting.com/wp-content/themes/zthosting/assets/images/envalop.png)[info(at)zthosting(dot)com](mailto:info(at)zthosting(dot)com)
+- ![](https://zthosting.com/wp-content/themes/zthosting/assets/images/phone.png)03 111 04 5555
+
+- [Promo](https://zthosting.com/promo-packages/ "Promo")
+- [Blog](https://zthosting.com/blog/ "Blog")
+- [Contact Us](https://zthosting.com/contact-us/ "Contact Us")
+- [Client Area](https://my.zthosting.com/clientarea.php "Client Area")
+
+[![](https://zthosting.com/wp-content/uploads/logo-zthosting-lite.png)](https://zthosting.com/)
+
+- [Shared Web Hosting](https://zthosting.com/web-hosting/ "Shared Web Hosting")
+- [PRO Hosting](https://zthosting.com/terms-conditions/# "PRO Hosting")
+  - [Business Web Hosting](https://zthosting.com/business-web-hosting/ "Business Web Hosting")
+  - [Best WordPress Hosting](https://zthosting.com/best-wordpress-hosting/ "Best WordPress Hosting")
+  - [Fully Managed VPS](https://zthosting.com/vps-hosting/ "Fully Managed VPS")
+  - [Business E-mail Hosting](https://zthosting.com/e-mail-hosting/ "Business E-mail Hosting")
+  - [Managed Dedicated Server](https://zthosting.com/managed-dedicated-server/ "Managed Dedicated Server")
+- [Reseller Hosting](https://zthosting.com/reseller-hosting/ "Reseller Hosting")
+- [Domain Registration](https://zthosting.com/domain-registration/ "Domain Registration")
+
+# Terms & Conditions
+
+## Terms & Conditions
+
+### ZtHosting
+
+These Terms of Service (the “Agreement”) are an agreement between you (“User” or “you” or “your”) and ZtHosting (“Company” or “we” or “us” or “our”). This Agreement sets forth the general terms and conditions of your use of the products and services made available by us and on our website (collectively, the “Services”).
+
+- **Account Eligibility**
+1. By registering for or using the Services, you represent and warrant that:
+     1. You are eighteen (18) years of age or older. The Services are intended solely for Users who are eighteen (18) years of age or older. Any registration, use of or access to the Services, by anyone under eighteen (18) is unauthorized and is a violation of this Agreement.
+     2. If you use the Services on behalf of another party you agree that you are authorized to bind such other party to this Agreement and to act on such other party’s behalf with respect to any actions you take in connection with the Services.
+2. It is your responsibility to provide accurate, current, and complete information on the registration forms, including an email address that is different from the domain you are signing up under. If there is ever an abuse issue or we need to contact you, we will use the primary email address we have on file. It is your responsibility to ensure that the contact information for your account, including any domain accounts is accurate, correct and complete at all times. This information may be verified by us at any time by asking for a copy of your CNIC or calling you on your phone number. We are not responsible for any lapse in the Services, including without limitation, any lapsed domain registrations due to outdated contact information being associated with the domain. If you need to verify or change your contact information, please contact our team via email or update your contact information through our support system. Providing false contact information of any kind may result in the termination of your account. For dedicated server purchases or in certain other cases, you may be required to provide government issued identification and possibly a scan of the credit card used for verification purposes. Failure to provide the information requested may result in your order being denied.
+3. You agree to be fully responsible for all use of your account and for any actions that take place through your account. It is your responsibility to maintain the confidentiality of your password and other information related to the security of your account.
+- **ZtHosting  Content**
+1. Except for User Content (as defined below), all content available through the Services, including designs, text, graphics, images, video, information, software, audio and other files, and their selection and arrangement, and all software used to provide the Services (collectively, “ZtHosting Content”), are the proprietary property of the ZtHosting or the ZtHosting’s licensors. ZtHosting Content may not be modified, copied, distributed, framed, reproduced, republished, downloaded, scraped, displayed, posted, transmitted, sold or exploited for any purpose in any form or by any means, in whole or in part, other than as expressly permitted in this Agreement. You may not, directly or indirectly, reverse engineer, decompile, disassemble or otherwise attempt to derive source code or other trade secrets from any ZtHosting Content. Any use of ZtHosting Content, other than as specifically authorized herein, is prohibited and will automatically terminate your rights to use the Services and any ZtHosting Content. All rights to use ZtHosting Content that are not expressly granted in this Agreement are reserved by the ZtHosting and the ZtHosting’s licensors.
+- **User Content**
+1. You may upload, store, publish, display, and distribute information, text, photos, videos and other content for your website on or through the Services (collectively, “User Content”). User Content includes any content posted by you or by users of any of your websites hosted through the Services (“User Websites”). You are solely responsible for any and all User Content and any transactions or other activities conducted on or through User Websites. By posting or distributing User Content on or through the Services, you represent and warrant to us that (i) you have all the necessary rights to post or distribute such User Content, and (ii) your posting or distribution of such User Content does not infringe or violate the rights of any third party.
+2. Solely for purposes of providing the Services, you hereby grant to ZtHosting a non-exclusive, royalty-free, worldwide right and license to: (i) use, reproduce, publicly perform, publicly display, modify, translate, excerpt (in whole or in part), publish and distribute User Content; and (ii) make archival or back-up copies of User Content and User Websites. Except for the rights expressly granted herein, ZtHosting does not acquire any right, title or interest in or to the User Content, all of which shall remain solely with you.
+3. We exercise no control over, and accept no responsibility for, User Content or the content of any information passing through our computers, network hubs and points of presence or the internet. We do not monitor User Content. However, you acknowledge and agree that we may, but are not obligated to, immediately take any corrective action in our sole discretion, including without limitation removal of all or a portion of the User Content or User Websites, and suspend or terminate any and all Services without refund if you violate the terms of this Agreement. You hereby agree that the ZtHosting shall have no liability due to any corrective action that we may take.
+- **HIPAA Disclaimer**
+1. The Services do not comply with the U.S. Health Insurance Portability and Accountability Act (“HIPAA”). You are solely responsible for compliance with all applicable laws governing the privacy and security of personal data, including medical or other sensitive data. You acknowledge that the Services are not appropriate for the storage or control of access to sensitive data, such as information about children or medical or health information. We do not control or monitor the information or data you store on, or transmit through, our Services. We specifically disclaim any representation or warranty that the Services, as offered, comply with HIPAA. Users requiring secure storage of “Protected Health Information” as defined under HIPAA are expressly prohibited from using this Service for such purposes. Storing and permitting access to “Protected Health Information,” is a material violation of this Agreement, and grounds for immediate account termination. We do not sign “Business Associate Agreements,” and you agree that ZtHosting is not a Business Associate or subcontractor or agent of yours pursuant to HIPAA. If you have questions about the security of your data, please contact us by phone or chat.
+- **Certain Services; 404 Error Page**
+1. In the event you fail to configure a 404 error page, a default 404 error page will be configured by ZtHosting to appear in the event an Internet user enters a URL related to your domain but for which no file is associated. By not configuring a 404 error page, you hereby consent to and authorize ZtHosting’s placement of a default 404 error page and its associated content on your website. ZtHosting’s 404 error page may contain advertisements and other materials selected by ZtHosting in the ZtHosting’s sole discretion. This may include, but is not limited to, third-party websites, third-party product and service offerings, and/or Internet search engines. You may change the 404 error page configuration at any time. ZtHosting reserves the right to collect and retain all revenue obtained from such advertising and other materials.
+- **Third Party Products and Services**
+1. **_Third Party Providers_**
+     1. We may offer certain third party products and services. Such products and services may be subject to the terms and conditions of the third party provider. Discounts, promotions and special third party offers may be subject to additional restrictions and limitations by the third party provider. You should confirm the terms of any purchase and the use of goods or services with the specific third party provider with whom you are dealing.
+     2. ZtHosting does not make any representations or warranties regarding, and is not liable for, the quality, availability, or timeliness of goods or services provided by a third party provider. You undertake all transactions with these third party providers at your own risk. We do not warrant the accuracy or completeness of any information regarding third party providers. ZtHosting is not an agent, representative, trustee or fiduciary of you or the third party provider in any transaction.
+2. **_ZtHosting as Reseller or Sublicensor_**
+     1. We may act as a reseller or sublicensor of certain third party services, hardware, software and equipment used in connection with the Services (“Resold Products”). We shall not be responsible for any changes in the Services that cause any Resold Products to become obsolete, require modification or alteration, or otherwise affect the performance of the Services. Any malfunction or manufacturer’s defects of Resold Products, either sold, sublicensed or provided by us to you will not be deemed a breach of ZtHosting’s obligations under this Agreement. Any rights or remedies you may have regarding the ownership, licensing, performance or compliance of any Resold Product are limited to those rights extended to you by the manufacturer of such Resold Product. You are entitled to use any Resold Product supplied by us only in connection with your use of the Services as permitted under this Agreement. You shall make no attempt to copy, alter, reverse engineer, or tamper with such Resold Product or to use it other than in connection with the Services. You shall not resell, transfer, export or re-export any Resold Product, or any technical data derived therefrom, in violation of any applicable law, rules or regulations.
+3. **_Third Party Websites_**
+     1. The Services may contain links to other websites that are not owned or controlled by us (“Third Party Sites”), as well as articles, photographs, text, graphics, pictures, designs, sound, video, information, and other content or items belonging to or originating from third parties (“Third Party Content”). We are not responsible for any Third Party Sites or Third Party Content accessed through the Services. Third Party Sites and Third Party Content are not investigated, monitored or checked for accuracy, appropriateness, or completeness by us. If you decide to access Third Party Sites or to access or use any Third Party Content, you do so at your own risk and you should be aware that our terms and policies no longer govern. You should review the applicable third party’s terms and policies, including privacy and data gathering practices of any website to which you navigate.
+- **Prohibited Persons (Countries, Entities, And Individuals)**
+1. The Services are subject to export control and economic sanctions laws and regulations administered or enforced by the laws of Pakistan. You may not use the Services to export or reexport, or permit the export or reexport, of software or technical data in violation of Pakistani Laws. In addition, by using the Services, you represent and warrant that you are not (a) an individual, organization or entity organized or located in a country or territory that is the target of Pakistani Armed Forces; (b) designated as a person of interest by the Pakistani Law enforcement agencies; (c) otherwise a prohibited party under Pakistani Laws; or (d) engaged in terrorism or are dealing with nuclear, missile, chemical or biological weapons activities without the permission of the Government of Pakistan. Unless otherwise provided with explicit written permission, ZtHosting also does not register, and prohibits the use of any of our Services in connection with, any Country-Code Top Level Domain Name (“ccTLD”) for any country or territory that is the target of government sanctions. The obligations under this section shall survive any termination or expiration of this Agreement or your use of the Services.
+- **Account Security and ZtHosting Systems**
+1. It is your responsibility to ensure that scripts/programs installed under your account are secure and permissions of directories are set properly, regardless of the installation method. When at all possible, set permissions on most directories to as restrictive as possible. Users are ultimately responsible for all actions taken under their account. This includes the compromise of credentials such as username and password. You are required to use a secure password. If a weak password is used, your account may be suspended until you agree to use a more secure password. Audits may be done to prevent weak passwords from being used. If an audit is performed, and your password is found to be weak, we will notify you and allow time for you to change or update your password before suspending your account.
+2. **Inode Limits**
+
+
+     An inode is a data structure used to keep information about a file on your hosting account. The number of inodes indicates the number of files and folders you have. This includes everything on your account, emails, files, folders, anything you store on the server.If an account exceeds one hundred and fifty thousand (150,000) inodes it will be automatically removed from our courtesy backup system to avoid over-usage. The use of more than two hundred and fifty thousand (250,000) inodes on any shared or reseller account prevents user from writing data to disk, and if no action is taken to reduce the excessive use of inodes, your account may be suspended.
+3. The Services, including all related equipment, networks and network devices are provided only for authorized customer use. We may, but are not obligated to, monitor our systems, including without limitation, to ensure that use is authorized, to facilitate protection against unauthorized access, and to verify security procedures, survivability, and operational security. During monitoring, information may be scanned, examined, recorded, copied and used for authorized purposes. By using the Services, you consent to monitoring for these purposes.
+4. Any account found connecting to a third party network or system without authorization from the third party is subject to suspension. Access to networks or systems outside of your direct control requires the express written consent of the third party. We may, at our discretion, request documentation to prove that your access to a third party network or system is authorized.
+5. Any account that is found to be compromised may be disabled and/or terminated. If you do not clean up your account after being notified by us of an ongoing issue, we reserve the right to keep your account disabled. Upon your request, we may clean-up your account for an additional fee.
+6. We reserve the right to migrate your account from one data-center to another in order to comply with applicable data center policies, local law or for technical or other reasons without notice.
+7. Continuous overuse of server resources may also result in account suspension/termination. Any account using 25% CPU / Memory resources for more than 60 seconds, resulting from the single or combined use of FTP, CGI Scripts, HTML or MySql resources will result in account suspension.
+- **Compatibility with the Services**
+1. You agree to cooperate fully with us in connection with our provision of the Services. It is solely your responsibility to provide any equipment or software that may be necessary for your use of the Services. To the extent that the performance of any of our obligations under this Agreement may depend upon your performance of your obligations, ZtHosting is not responsible for any delays due to your failure to timely perform your obligations.
+2. You are solely responsible for ensuring that all User Content and User Websites are compatible with the hardware and software used by us to provide the Services, which may be changed by us from time to time in our sole discretion.
+3. You are solely responsible for backing-up all User Content, including but not limited to, any User Websites. ZtHosting does not warrant that we back-up any User Content, and you agree to accept the risk of loss of any and all User Content.
+- **Billing and Payment Information**
+01. **Prepayment**
+
+
+      It is your responsibility to ensure that your payment information is up to date, and that all invoices are paid on time. You agree to pay for the Services in advance of the time period during which such Services are provided. Subject to applicable laws, rules, and regulations, at our sole discretion, payments may be applied to outstanding invoices in your billing account.
+02. **Autorenewal**
+
+
+      Unless otherwise provided, you agree that until and unless you notify us of your desire to cancel the Services, you may be billed, but we are not obligated to bill you, on an automatically recurring basis to prevent any disruption to your Services, using your credit card or other billing information on file with us.
+03. **Advance Account**
+
+
+      If you maintain a credit balance, we will deduct from the credit balance when you purchase products or services from us.  If the credit balance is insufficient for processing the order the order may not be processed. Any negative balance in the Advance Account will become immediately payable. If you do not correct a negative balance in your account within 24 hours, we reserve the right to terminate the Services with immediate effect and without any notice.
+04. **Taxes**
+
+
+      Listed fees for the Services do not include any applicable sales, use, revenue, excise or other taxes imposed by any taxing authority in particular Federal and Provincial Sales Tax, unless otherwise provided. Any applicable taxes will be added to your invoice as a separate charge to be paid by you and if they are not added paying them is your own responsibility. By agreeing to this agreement you agree that all Sales Tax will be paid by you if you have not paid it to ZtHosting. All fees are non-refundable when paid unless otherwise stated.
+05. **Late Payment or Non-Payment**
+
+
+      Any invoice that is outstanding may result in the suspension or termination of Services. Access to the account will not be restored until payment has been received. If you fail to pay the fees as specified herein, we may suspend or terminate your account and pursue the collection costs incurred by ZtHosting, including without limitation, any arbitration and legal fees, and lawyer fees. We will not activate new orders or activate new packages for customers who have an outstanding balance on their account.Dedicated servers are subject to being reclaimed and all content deleted if you fail to make a timely payment. You have fifteen (15) days from the expiry date to pay the outstanding amount due for a dedicated server. After 15 days, the data on the dedicated server will be permanently deleted and may not be restored.
+06. **Domain Payments**
+      1. Domain registrations. No refunds will be given once a domain is registered.
+      2. Domain Renewals.  You can manage domain renewals by contacting us. Domain renewal notices may be provided as a courtesy reminder and we are not responsible for any failure to renew a domain or failure to notify about a domain renewal. No refunds will be given once a domain is renewed.
+07. **Fraud**
+      1. It is a violation of this Agreement for you to misuse or fraudulently use credit cards, charge cards, electronic funds transfers, electronic checks, or any other payment method. We may report any such misuse or fraudulent use, as determined in our sole discretion, to governmental and law enforcement authorities, credit reporting services, financial institutions and/or credit card companies.
+08. **Invoice Disputes**
+
+
+      If you have any questions concerning a charge on your account, please reach out to our billing department for assistance.
+09. **Price/Currency Change**
+
+
+      ZtHosting reserves the right to change prices, currency, the monthly payment amount, or any other charges at any time. We will provide you with at least thirty (30) days’ notice before charging you with any substantial company price change that takes place in US Dollars. However payments made in other currencies such as Pakistani Rupees are pegged with the US Dollar and will fluctuate with the foreign exchange. It is your sole responsibility to periodically review billing information provided by us through the user billing tool or through other methods of communication, including notices sent or posted by us.
+10. **Discounts** Discounts and coupon codes are may be given by ZtHosting at certain times. Coupon abuse will not be tolerated and may result in the suspension or termination of your account. All coupons and discounts are only valid towards the initial purchase and do not affect the renewal or recurring price.
+- **Money-back Guarantee**
+1. ZtHosting offers a thirty (30) day money- back guarantee for hosting services only. If you are not completely satisfied with these hosting services and you terminate your account within thirty (30) days of signing up for the Services, you will be given a full refund of the amount paid for hosting. This money-back guarantee only applies to fees paid for hosting services and does not apply to any fees for any additional products or services. For more information about our refund policy on additional products or services please refer to the section Non-refundable Products and Services.
+2. There are no refunds on dedicated servers and VPS. The thirty (30) day money- back guarantee does not apply to dedicated servers and VPS.
+3. There are no refunds on accounts terminated for violations of terms and conditions.
+4. There are no refunds on domain name registrations. However domain transfers can be facilitated.
+- **Cancellations and Refunds**
+1. **Refunds**
+
+
+     Only first-time accounts are eligible for a refund. For example, if you’ve had an account with us before, canceled and signed up again, or if you have opened a second account with us, you will not be eligible for a refund. Violations of this Agreement will waive your rights under the refund policy. To claim the refund you may contact us within 30 days of registration and state clearly the exact reason why a refund is required and why you are dissatisfied with the service.
+2. **Non-refundable Products and Services**
+
+
+     Notwithstanding anything to the contrary contained in this Agreement, there are no refunds of any fee (including without limitation, administrative fee and/or tax) on dedicated servers, or additional products or services such as Codeguard, Digital Certificates, shared VPS hosting, SiteLock install fees for custom software, and/or any other products or services of the ZtHosting.
+3. **Cancellation Process**
+
+
+     You may terminate or cancel the Services by contacting us. If you cancel the Services, you are obligated to pay all fees and charges accrued prior to the effectiveness of such cancellation.
+
+
+     Please note that if you have pending orders outstanding on your account at the time you cancel your account, we will continue to process those orders so long as your Advance Account has sufficient funds to cover the charges. If we are unable to fulfill any orders, the charges for such orders will be reversed and we reserve the right to cancel such orders.
+
+
+     We reserve the right to deny or cancel any order within thirty (30) days of processing such order. In such case we will refund the fees charged for the order.
+- **Termination**
+1. We may terminate your access to the Services, in whole or in part, without notice in the event that: (i) you fail to pay any fees due; (ii) you violate this Agreement; (iii) your conduct may harm ZtHosting or others or cause ZtHosting or others to incur liability, as determined by us in our sole discretion; or (iv) as otherwise specified in this Agreement. In such event, we will not refund to you any fees paid in advance of such termination, and you shall be obligated to pay all fees and charges accrued prior to the effectiveness of such termination. Additionally, ZtHosting may charge you for all fees due for the Services for the remaining portion of the then current term. UPON TERMINATION OF THE SERVICES FOR ANY REASON, USER CONTENT, USER WEBSITES, AND OTHER DATA MAY BE DELETED.
+- **CPU, Bandwidth and Disk Usage**
+1. Shared hosting space may only be used for web files, active email and content of User Websites. Shared hosting space may not be used for storage (whether of media, emails, or other data), including, as offsite storage of electronic files, email or FTP hosts. We expressly reserve the right to review every shared account for excessive usage of CPU, disk space and other resources that may be caused by a violation of this Agreement or the Acceptable Use Policy. We may, in our sole discretion, terminate access to the Services or remove or delete User Content for those accounts that are found to be in violation of these Terms and Conditions and other policies. Dedicated and VPS usage will be limited by the resources allocated to the specific plan that you purchase.
+2. The space we provide for hosting should not be used as a storage medium for your files or data. At least 90% of your web pages must be ‘linked’ with files (GIF, JPEG, etc.) stored on ZtHosting servers. Websites that are found to contain either/or no HTML documents, a large number of unlinked files are subject to files deletion or account cancelation.
+3. Bandwidth usage is unmetered (i.e., not monitored) for shared hosting services only.
+- **Reseller Terms and Client Responsibility**
+1. Shared accounts may not be used to resell web hosting to others. If you wish to resell hosting you must use a reseller account.
+2. Resellers shall ensure that each of its clients, customers or users (“Reseller Users”) complies with this Agreement.
+3. Resellers are responsible for supporting Reseller Users, including but not limited to providing customer service, billing support and technical support. The ZtHosting does not provide support to Reseller Users. If a Reseller User contacts us, we reserve the right to place a reseller client account on hold until the reseller can assume responsibility for the Reseller User. All support requests must be made by the reseller on Reseller User’s behalf for security purposes.
+4. Resellers are also responsible for all content stored or transmitted under their reseller account and the actions of Reseller Users. ZtHosting may hold any reseller responsible for any of their client’s actions that violate the law or this Agreement.
+5. ZtHosting is not responsible for the acts or omissions of our resellers. The reseller hereby agrees to indemnify ZtHosting from and against any and all claims made by any User arising from the reseller’s acts or omissions.
+6. ZtHosting reserves the right to revise our Reseller Program at any time. Changes shall take effect when posted online or on any subsequent date as may be set forth by ZtHosting.
+7. Resellers in the ZtHosting’s Reseller Program assume all responsibility for billing and technical support for each of the Users signed up by the reseller.
+- **Limitation of Liability**
+1. IN NO EVENT WILL ZtHosting, ITS DIRECTORS, EMPLOYEES OR AGENTS BE LIABLE TO YOU OR ANY THIRD PERSON FOR ANY INDIRECT, CONSEQUENTIAL, EXEMPLARY, INCIDENTAL, SPECIAL OR PUNITIVE DAMAGES, INCLUDING FOR ANY LOST PROFITS OR LOST DATA ARISING FROM YOUR USE OF THE SERVICES, OR ANY USER CONTENT, USER WEBSITES OR OTHER MATERIALS ACCESSED OR DOWNLOADED THROUGH THE SERVICES, EVEN IF ZtHosting IS AWARE OR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.NOTWITHSTANDING ANYTHING TO THE CONTRARY CONTAINED HEREIN, ZtHosting’S LIABILITY TO YOU, OR ANY PARTY CLAIMING THROUGH YOU, FOR ANY CAUSE WHATSOEVER, AND REGARDLESS OF THE FORM OF THE ACTION, IS LIMITED TO THE AMOUNT PAID, IF ANY, BY YOU TO ZtHosting FOR THE SERVICES IN THE THREE (3) MONTHS PRIOR TO THE INITIAL ACTION GIVING RISE TO LIABILITY. THIS IS AN AGGREGATE LIMIT. THE EXISTENCE OF MORE THAN ONE CLAIM HEREUNDER WILL NOT INCREASE THIS LIMIT.
+- **Indemnification**
+1. You agree to indemnify, defend and hold harmless ZtHosting, our affiliates, and their respective officers, directors, employees and agents (each an “Indemnified Party” and, collectively, the “Indemnified Parties”) from and against any and all claims, damages, losses, liabilities, suits, actions, demands, proceedings (whether legal or administrative), and expenses (including, but not limited to, reasonable attorney’s fees) threatened, asserted, or filed by a third party against any of the Indemnified Parties arising out of or relating to (i) your use of the Services, (ii) any breach or violation by you of this Agreement; or (iii) any acts or omissions by you. The terms of this section shall survive any termination of this Agreement.
+- **Arbitration**
+1. All disputes, controversies and differences arising out of or relating to this Agreement, including a dispute relating to the validity or existence of this Agreement (“Dispute”) shall be referred to and resolved by arbitration in Islamabad, Pakistan under the provisions of The Arbitration Act 1940; provided that, to the extent a party may suffer immediate and irreparable harm for which monetary damages would not be an adequate remedy as a result of the other party’s breach or threatened breach of any obligation hereunder, such party may seek equitable relief, including an injunction, from a court of competent jurisdiction, which shall not be subject to this Section. The arbitration tribunal shall consist of one (1) arbitrator jointly appointed by the parties within fifteen (15) days from the date of first recommendation for an arbitrator in written form for a party to the other. If the parties fail to agree on appointment of such arbitrator, then the arbitrator shall be appointed as per the provisions of The Arbitration Act, 1940. The language of the arbitration shall be English. As part of the terms of the appointment of the arbitrator(s), the arbitrator(s) shall be required to produce a final and binding award or awards within six (6) months of the appointment of the sole arbitrator (jointly appointed by the parties). Parties shall use their best efforts to assist the arbitrator(s) to achieve this objective, and the parties agree that this six (6) month period shall only be extended in exceptional circumstances, which are to be determined by the arbitrator(s) in its absolute discretion. The arbitral award passed by the arbitrator shall be final and binding on the parties and shall be enforceable in accordance with its terms. The arbitrator shall state reasons for its findings in writing. The parties agree to be bound thereby and to act accordingly. All costs of the arbitration shall be borne equally by the parties.
+- **Independent Contractor**
+1. ZtHosting and User are independent contractors and nothing contained in this Agreement places the ZtHosting and User in the relationship of principal and agent, partners or joint ventures. Neither party has, expressly or by implication, or may represent itself as having, any authority to make contracts or enter into any agreements in the name of the other party, or to obligate or bind the other party in any manner whatsoever.
+- **Governing Law; Jurisdiction**
+1. Any controversy or claim arising out of or relating to this Agreement, the formation of this Agreement or the breach of this Agreement, including any claim based upon an alleged tort, shall be governed by the substantive laws of Pakistan.Notwithstanding the foregoing, the United Nations Convention on Contracts for the International Sale of Goods does not apply to this Agreement.
+- **Backups and Data Loss**
+1. Your use of the Services is at your sole risk. the ZtHosting does not maintain backups of dedicated accounts or the Services purchased by you. You should not rely on the ZtHosting for backup. It is solely your responsibility to maintain backups. ZtHosting is not responsible for files and/or data residing on your account. You agree to take full responsibility for all files and data transferred and to maintain all appropriate backup of files and data stored on the ZtHosting’s servers.
+- **Limited Disclaimer and Warranty**
+1. THE SERVICES PROVIDED UNDER THIS AGREEMENT ARE PROVIDED ON AN “AS IS” AND “AS AVAILABLE BASIS.” EXCEPT AS EXPRESSLY PROVIDED IN THIS SECTION, THE ZtHosting AND OUR AFFILIATES, EMPLOYEES, AGENTS, SUPPLIERS AND LICENSORS DISCLAIM ALL WARRANTIES OF ANY KIND, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT. THE ZtHosting AND OUR AFFILIATES, EMPLOYEES, AGENTS, SUPPLIERS AND LICENSORS MAKE NO REPRESENTATIONS OR WARRANTIES (I) THAT THE SERVICES WILL BE UNINTERRUPTED, ERROR FREE OR COMPLETELY SECURE; (II) AS TO THE RESULTS THAT MAY BE OBTAINED FROM THE USE OF THE SERVICES; OR (III) AS TO THE ACCURACY, RELIABILITY OR CONTENT OF ANY INFORMATION PROVIDED THROUGH THE SERVICES. THE ZtHosting AND OUR AFFILIATES, EMPLOYEES, AGENTS, SUPPLIERS AND LICENSORS ARE NOT LIABLE, AND EXPRESSLY DISCLAIMS ANY LIABILITY, FOR THE CONTENT OF ANY DATA TRANSFERRED EITHER TO OR FROM USERS OR STORED BY USERS ON OR THROUGH THE SERVICES. THE TERMS OF THIS SECTION SHALL SURVIVE ANY TERMINATION OF THIS AGREEMENT.
+- **Entire Agreement**
+1. This Agreement, including policies and documents incorporated by reference, supersedes all prior discussions, negotiations and agreements between the parties with respect to the subject matter hereof, and this Agreement constitutes the sole and entire agreement between the parties with respect to the matters covered hereby.
+- **Headings**
+1. The headings herein are for convenience only and are not part of this Agreement.
+- **Changes to the Agreement or the Services**
+1. We may change or modify this Agreement at any time. We will post a notice of any significant changes to this Agreement on our website for at least thirty (30) days after the changes are posted and will indicate at the bottom of this Agreement the date these terms were last revised. Any changes or modifications to this Agreement shall be effective and binding on you as of the date indicated in a notice posted on this page. If no date is specified, your use of the Services after such changes or modifications shall constitute your acceptance of the Agreement as modified. If you do not agree to abide by this Agreement, you are not authorized to use or access the Services.
+- **Severability**
+1. If any provision or portion of any provision of this Agreement is found to be illegal, invalid or unenforceable by a court of competent jurisdiction, the remaining provisions or portions (unless otherwise specified) thereof shall remain in full force and effect.
+- **Waiver**
+1. No failure or delay by you or the ZtHosting to exercise any right or remedy hereunder shall operate as a waiver thereof, nor shall any single or partial exercise of any right or remedy preclude any other or further exercise of any right or remedy. No express waiver of, or assent to, any breach of or default in any term or condition of this Agreement by any party hereto shall constitute a waiver of, or an assent to, any succeeding breach of or default in the same or any other term or condition hereof.
+- **Assignment; Successors**
+1. You may not assign or transfer this Agreement or any of your rights or obligations hereunder, without the prior written consent of ZtHosting. Any attempted assignment in violation of this Agreement shall be null and void and of no force or effect whatsoever. We may assign our rights and obligations under this Agreement, and may engage subcontractors or agents in performing our duties and exercising our rights hereunder, without the consent of User. This Agreement shall be binding upon and shall inure to the benefit of the parties hereto and their respective successors and permitted assigns.
+- **Force Majeure**
+1. Neither party is liable for any default or delay in the performance of any of its obligations under this Agreement (other than failure to make payments when due) if such default or delay is caused, directly or indirectly, by forces beyond such party’s reasonable control, including, without limitation, fire, flood, acts of God, labor disputes, accidents, acts of war or terrorism, interruptions of transportation or communications, supply shortages or the failure of any third party to perform any commitment relative to the production or delivery of any equipment or material required for such party to perform its obligations hereunder.
+
+- **Additional Policies and Agreements**
+1. Use of the Services is also governed by the following policies, which are incorporated into this Agreement by reference. By using the Services, you also agree to the terms of the following policies:
+
+
+     – [Acceptable Use Policy](https://zthosting.com/acceptable-use-policy/)
+
+
+     – [Privacy Policy](https://zthosting.com/privacy-policy/)
+2. Additional terms may also apply to certain Services and are incorporated into this Agreement by reference as applicable.
+
+##### Social Platforms:  [Facebook.com/zthosting](https://www.facebook.com/zthosting). [Instagram.com/zthosting](https://www.instagram.com/zthosting/), [Linkedin.com/zerotolerancehosting](https://www.linkedin.com/company/zerotolerancehosting), [Twitter.com/Zthosting](https://www.twitter.com/zthosting)
+
+Page Content
+
+[Toggle](https://zthosting.com/terms-conditions/#)
+
+- [Terms & Conditions](https://zthosting.com/terms-conditions/#Terms_Conditions)
+  - [Terms & Conditions](https://zthosting.com/terms-conditions/#Terms_Conditions-2)
+    - [ZtHosting](https://zthosting.com/terms-conditions/#ZtHosting)
+      - [Social Platforms: \\
+              Facebook.com/zthosting. Instagram.com/zthosting, Linkedin.com/zerotolerancehosting, Twitter.com/Zthosting](https://zthosting.com/terms-conditions/#Social_Platforms_Facebookcomzthosting_Instagramcomzthosting_Linkedincomzerotolerancehosting_TwittercomZthosting)
+
+[Back To Top](https://zthosting.com/terms-conditions/#top "Go to the top of the page")
+
+![Terms & Conditions | Most Reliable and Secured | zthosting](https://zthosting.com/wp-content/uploads/logo-zthosting-lite.png)
+
+Founded in a call center room at Islamabad [Pakistan](https://en.wikipedia.org/wiki/Pakistan), ZtHosting has grown into a leading provider of Shared, Reseller, VPS, and Dedicated web hosting.
+
+### Let's Work
+
+- [Web Hosting in Pakistan – Best Web Hosting – ZTHosting](https://zthosting.com/)
+- [Business Web Hosting](https://zthosting.com/business-web-hosting/)
+- [WordPress Hosting](https://zthosting.com/best-wordpress-hosting/)
+- [Reseller Hosting](https://zthosting.com/reseller-hosting/)
+- [VPS Hosting](https://zthosting.com/vps-hosting/)
+- [Dedicated Server](https://zthosting.com/managed-dedicated-server/)
+- [Business E-mail Hosting](https://zthosting.com/e-mail-hosting/)
+- [Domain Registration](https://zthosting.com/domain-registration/)
+- [Promo Packages](https://zthosting.com/promo-packages/)
+
+### Support
+
+- [Client Area](https://my.zthosting.com/clientarea.php)
+- [Submit A Ticket](https://my.zthosting.com/submitticket.php)
+- [Contact Us](https://zthosting.com/contact-us/)
+- [About](https://zthosting.com/about-us/)
+- [Acceptable Use Policy](https://zthosting.com/acceptable-use-policy/)
+- [Privacy Policy](https://zthosting.com/privacy-policy/)
+- [Terms & Conditions](https://zthosting.com/terms-conditions/)
+
+### Get In Touch
+
+- Address: Office# 202, 2nd Floor Chenab Center Blue Area Islamabad, 44000 Pakistan
+- Email: [info(at)zthosting(dot)com](mailto:info(at)zthosting(dot)com)
+- Phone: 03 111 04 5555
+
+Available
+
+![Chat attention grabber](https://embed.tawk.to/_s/v4/assets/images/attention-grabbers/42-br.svg)
+

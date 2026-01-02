@@ -2435,110 +2435,52 @@ async def add_faq(request: Request):
 
 
 
-# @app.post("/ask")
-# async def ask_bot(request: Request):
-#     try:
-#         data = await request.json()
-#         user_input = data.get("message", "").strip()
-        
-#         # --- NEW: STRICT TOPIC FILTER ---
-#         # Agar sawal hosting se related nahi hai to AI ko call hi nahi karna
-#         hosting_keywords = ["hosting", "server", "domain", "plan", "price", "ssd", "zt", "support", "gold", "refund", "email"]
-#         if not any(word in user_input.lower() for word in hosting_keywords) and len(user_input) > 5:
-#             return {"answer": "Sorry, I am here to provide information about ZT Hosting only."}
-
-#         # --- EXISTING: DATABASE CHECK (PRIORITY) ---
-#         # Isay hum AI se pehle hi rakhenge taake DB priority bani rahe
-#         db_res = supabase.table("manual_faqs").select("question, answer").execute()
-#         for row in db_res.data:
-#             # Agar user ka sawal DB ke sawal ke andar hai ya DB ka sawal user ke sawal mein
-#             if row['question'].lower() in user_input.lower() or user_input.lower() in row['question'].lower():
-#                 return {"answer": row['answer']}
-
-#         # --- EXISTING: AI FALLBACK (STRICT PROMPT) ---
-#         llm = get_llm()
-#         # Prompt ko thora aur sakht kiya hai taake ye bakwas na kare
-#         prompt = ChatPromptTemplate.from_template("""
-#         You are ZT Hosting Support. 
-#         1. Answer ONLY about ZT Hosting using the context.
-#         2. If the question is not about hosting, say: "Sorry, I am here to provide information about ZT Hosting only."
-#         3. Use **bold** for prices.
-#         4. No greetings. Max 1-2 sentences.
-
-#         Context: {context} 
-#         Question: {input}
-#         Answer:""")
-        
-#         context = DATA_PATH.read_text(encoding="utf-8")[:5000] if DATA_PATH.exists() else ""
-#         response = llm.invoke(prompt.format(context=context, input=user_input))
-        
-#         # --- NEW: FINAL GUARDRAIL ---
-#         # Agar AI ne phir bhi koi ajeeb jawab diya (maslan PM ya Jokes par)
-#         bad_words = ["prime minister", "joke", "minister", "president"]
-#         if any(word in response.content.lower() for word in bad_words):
-#              return {"answer": "Sorry, I am here to provide information about ZT Hosting only."}
-
-#         return {"answer": response.content.strip()}
-#     except Exception as e:
-#         return {"answer": f"System Error: {str(e)}"}
-
-
-
-# Updated app.py logic to fix "I don't know" issue
 @app.post("/ask")
 async def ask_bot(request: Request):
     try:
         data = await request.json()
         user_input = data.get("message", "").strip()
         
-        # 1. Database se FAQ uthayen
+        # --- NEW: STRICT TOPIC FILTER ---
+        # Agar sawal hosting se related nahi hai to AI ko call hi nahi karna
+        hosting_keywords = ["hosting", "server", "domain", "plan", "price", "ssd", "zt", "support", "gold", "refund", "email"]
+        if not any(word in user_input.lower() for word in hosting_keywords) and len(user_input) > 5:
+            return {"answer": "Sorry, I am here to provide information about ZT Hosting only."}
+
+        # --- EXISTING: DATABASE CHECK (PRIORITY) ---
+        # Isay hum AI se pehle hi rakhenge taake DB priority bani rahe
         db_res = supabase.table("manual_faqs").select("question, answer").execute()
-        db_context = ""
-        if db_res.data:
-            db_context = "\n".join([f"Q: {row['question']} A: {row['answer']}" for row in db_res.data])
+        for row in db_res.data:
+            # Agar user ka sawal DB ke sawal ke andar hai ya DB ka sawal user ke sawal mein
+            if row['question'].lower() in user_input.lower() or user_input.lower() in row['question'].lower():
+                return {"answer": row['answer']}
 
-        # 2. File (zt_data.txt) se data read karein
-        file_context = DATA_PATH.read_text(encoding="utf-8") if DATA_PATH.exists() else ""
-
+        # --- EXISTING: AI FALLBACK (STRICT PROMPT) ---
         llm = get_llm()
-        # Temperature 0 rakhein taake model tukkay na mare, lekin temperature 0.2 behtar hai natural language ke liye
-        llm.temperature = 0.2 
-        
+        # Prompt ko thora aur sakht kiya hai taake ye bakwas na kare
         prompt = ChatPromptTemplate.from_template("""
-        You are the ZT Hosting Support Specialist. Your job is to help users with Hosting and Domain information.
+        You are ZT Hosting Support. 
+        1. Answer ONLY about ZT Hosting using the context.
+        2. If the question is not about hosting, say: "Sorry, I am here to provide information about ZT Hosting only."
+        3. Use **bold** for prices.
+        4. No greetings. Max 1-2 sentences.
 
-        CONTEXT INFORMATION:
-        ---
-        DATABASE FAQS:
-        {db_info}
+        Context: {context} 
+        Question: {input}
+        Answer:""")
         
-        WEBSITE DATA & PRICING:
-        {file_info}
-        ---
-
-        INSTRUCTIONS:
-        1. Use the provided CONTEXT to answer the user's question.
-        2. If the answer is in the context, you MUST provide it. Don't say "I don't know" if the info is there.
-        3. If the user asks for prices (e.g., .pk domain or shared hosting), look carefully at the WEBSITE DATA section.
-        4. If the question is NOT related to hosting/domains at all, politely say: "I can only help you with ZT Hosting related queries."
-        5. Keep answers short (max 2-3 sentences).
-        6. Use **bold** for prices and plan names.
-
-        USER QUESTION: {input}
-        ANSWER:""")
-
-        response = llm.invoke(prompt.format(
-            db_info=db_context, 
-            file_info=file_context, 
-            input=user_input
-        ))
+        context = DATA_PATH.read_text(encoding="utf-8")[:5000] if DATA_PATH.exists() else ""
+        response = llm.invoke(prompt.format(context=context, input=user_input))
+        
+        # --- NEW: FINAL GUARDRAIL ---
+        # Agar AI ne phir bhi koi ajeeb jawab diya (maslan PM ya Jokes par)
+        bad_words = ["prime minister", "joke", "minister", "president"]
+        if any(word in response.content.lower() for word in bad_words):
+             return {"answer": "Sorry, I am here to provide information about ZT Hosting only."}
 
         return {"answer": response.content.strip()}
-
     except Exception as e:
-        print(f"Error: {e}")
-        return {"answer": "Technical issue ki wajah se reply nahi de pa raha. Please try again."}
-    
+        return {"answer": f"System Error: {str(e)}"}
 @app.get("/", response_class=HTMLResponse)
 async def get_home():
     if HTML_PATH.exists(): return HTML_PATH.read_text(encoding="utf-8")

@@ -2977,13 +2977,24 @@ async def ask_bot(request: Request):
 
         # --- STEP 3: AI PROCESSING ---
         llm = get_llm()
+        # system_prompt = (
+        #     "You are ZT Hosting Support assistant. Answer ONLY based on the provided context. "
+        #     "PRIORITY: For pricing, strictly use Markdown tables. "
+        #     "Always mention first-month price (e.g. $1) AND renewal price (e.g. PKR 2570) if present. "
+        #     "Use **bold** for prices and plans. "
+        #     "If info is not in context, say 'I am sorry, I don't have this information yet.'"
+        # )
+
+
         system_prompt = (
-            "You are ZT Hosting Support assistant. Answer ONLY based on the provided context. "
-            "PRIORITY: For pricing, strictly use Markdown tables. "
-            "Always mention first-month price (e.g. $1) AND renewal price (e.g. PKR 2570) if present. "
-            "Use **bold** for prices and plans. "
-            "If info is not in context, say 'I am sorry, I don't have this information yet.'"
-        )
+    "You are ZT Hosting Support assistant. Answer ONLY based on the provided context. "
+    "### CRITICAL INSTRUCTION for Pricing: ### "
+    "1. For any plan price, FIRST look at the Markdown Tables. "
+    "2. If a table shows a '$1/1st month' offer, you MUST mention it. Do not just say the PKR price. "
+    "3. Format pricing clearly: 'Promo: **$1 for the 1st month**, Renewing at: **PKR [Price]**'. "
+    "4. If info like 'cPanel accounts' or 'SSD Storage' is in a table, extract it accurately from the correct column. "
+    "5. If you cannot find the answer in the provided text, say 'I am sorry, I don't have this information yet.'"
+)
         
         prompt = ChatPromptTemplate.from_messages([
             ("system", system_prompt),

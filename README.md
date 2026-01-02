@@ -278,10 +278,10 @@ Other options:
 
 ### Context Limits
 - Default: 4000 characters per query
-- Adjustable in `api/app.py` line 2974
+- Adjustable in `api/app.py` line 2973
 
 ### Temperature Setting
-- Current: 0.1 (more deterministic responses)
+- Current: 0.1 (more deterministic and factual responses, reduces randomness and hallucinations)
 - Range: 0.0 - 1.0
 
 ## 🔧 Customization
@@ -298,8 +298,13 @@ elif "your_keyword" in user_input:
 Modify the system prompt in `api/app.py` (line 2989-2997):
 ```python
 system_prompt = (
-    "You are ZT Hosting Support assistant. "
-    "Your custom instructions here..."
+    "You are ZT Hosting Support assistant. Answer ONLY based on the provided context. "
+    "### CRITICAL INSTRUCTION for Pricing: ### "
+    "1. For any plan price, FIRST look at the Markdown Tables. "
+    "2. If a table shows a '$1/1st month' offer, you MUST mention it. Do not just say the PKR price. "
+    "3. Format pricing clearly: 'Promo: **$1 for the 1st month**, Renewing at: **PKR [Price]**'. "
+    "4. If info like 'cPanel accounts' or 'SSD Storage' is in a table, extract it accurately from the correct column. "
+    "5. If you cannot find the answer in the provided text, say 'I am sorry, I don't have this information yet.'"
 )
 ```
 
@@ -338,6 +343,8 @@ The chatbot's knowledge base includes:
 - Terms and policies
 
 Data is periodically scraped using `crawler.py` with FireCrawl API.
+
+**Note**: Some data files may have formatting variations (e.g., content on single lines). The chatbot handles these variations automatically during processing.
 
 ## 🔒 Security
 

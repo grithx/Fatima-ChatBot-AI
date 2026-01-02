@@ -2491,42 +2491,40 @@ async def ask_bot(request: Request):
         data = await request.json()
         user_input = data.get("message", "").strip()
         
-        # 1. Topic Guardrail (Hosting keywords check)
+        # 1. Topic Guardrail
         hosting_keywords = ["hosting", "server", "domain", "plan", "price", "ssd", "zt", "support", "gold", "refund", "email"]
         if not any(word in user_input.lower() for word in hosting_keywords) and len(user_input) > 5:
             return {"answer": "Sorry, I am here to provide information about ZT Hosting only."}
 
-        # 2. Database Fetch (Saara data uthana context ke liye)
+        # 2. Database Fetch
         db_res = supabase.table("manual_faqs").select("question, answer").execute()
         db_context = ""
         if db_res.data:
-            # Hum saare DB sawal-jawab ko aik string mein jama kar lenge
             db_context = "DATABASE INFO:\n" + "\n".join([f"Q: {row['question']} A: {row['answer']}" for row in db_res.data])
 
-        # 3. AI Prompt (Context Understanding + Enhancement)
+        # 3. Strict & Short AI Prompt
         llm = get_llm()
+        # Humne max_tokens=150 set kiya hai taake lamba jawab mumkin hi na ho
+        llm.max_tokens = 150 
+        
         prompt = ChatPromptTemplate.from_template("""
-        You are ZT Hosting Support.
+        You are ZT Hosting Support. Be direct, professional, and very brief.
         
-        TASK:
-        1. Look at the 'DATABASE INFO' provided below. If the user's question matches any topic in the database (even if wording is different), use the 'answer' from the database as your primary source.
-        2. ENHANCE the answer: Don't just copy-paste. Make it polite and professional, but keep the facts (like prices) exactly as they are in the database.
-        3. If not in Database, use the 'FILE CONTEXT'.
-        4. If the topic is not about hosting, say: "Sorry, I am here to provide information about ZT Hosting only."
-        5. Use **bold** for prices and plan names.
+        STRICT RULES:
+        1. NO greetings like "Hello", "I'd be happy to help", or "Thank you for reaching out".
+        2. Give the answer in ONLY 1-3 short sentences.
+        3. Use information from 'DATABASE INFO' if the topic matches. Otherwise use 'FILE CONTEXT'.
+        4. Use **bold** for prices and plan names.
+        5. If the question is irrelevant, say ONLY: "Sorry, I am here to provide information about ZT Hosting only."
 
-        DATABASE INFO:
-        {db_info}
-
-        FILE CONTEXT:
-        {file_info}
-
+        DATABASE INFO: {db_info}
+        FILE CONTEXT: {file_info}
         USER QUESTION: {input}
-        YOUR ENHANCED ANSWER:""")
-
-        file_context = DATA_PATH.read_text(encoding="utf-8")[:4000] if DATA_PATH.exists() else ""
         
-        # AI ab decide karega ke DB mein context match ho raha hai ya nahi
+        ANSWER:""")
+
+        file_context = DATA_PATH.read_text(encoding="utf-8")[:3000] if DATA_PATH.exists() else ""
+        
         response = llm.invoke(prompt.format(
             db_info=db_context, 
             file_info=file_context, 
@@ -2537,7 +2535,6 @@ async def ask_bot(request: Request):
 
     except Exception as e:
         return {"answer": "I am having trouble processing that. Please try again."}
-    
 @app.get("/", response_class=HTMLResponse)
 async def get_home():
     if HTML_PATH.exists(): return HTML_PATH.read_text(encoding="utf-8")

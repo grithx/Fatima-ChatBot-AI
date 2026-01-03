@@ -197,21 +197,22 @@ The `vercel.json` file in the repository configures the deployment:
 ```json
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/app.py",
-      "use": "@vercel/python"
-    }
-  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "api/app.py" }
-  ]
+  ],
+  "functions": {
+    "api/app.py": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  }
 }
 ```
 
 **What this does:**
-- **builds**: Tells Vercel to use Python runtime for `api/app.py`
 - **rewrites**: Routes all incoming requests to the FastAPI application
+- **functions**: Configures the Python function with specific memory (1024 MB) and timeout (10 seconds) settings
+- **Auto-detection**: Vercel automatically detects Python runtime from the `api/` directory structure
 - **No Node.js configuration needed**: The Express.js code is not used
 
 ---

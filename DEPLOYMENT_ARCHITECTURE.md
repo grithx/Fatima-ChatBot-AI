@@ -109,24 +109,25 @@ express           → NOT USED
 ```json
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/app.py",        👈 This file
-      "use": "@vercel/python"     👈 This runtime
-    }
-  ],
   "rewrites": [
     { 
       "source": "/(.*)",          👈 All requests
       "destination": "api/app.py" 👈 Go here
     }
-  ]
+  ],
+  "functions": {
+    "api/app.py": {               👈 This file
+      "memory": 1024,             👈 1GB memory
+      "maxDuration": 10           👈 10 second timeout
+    }
+  }
 }
 ```
 
 **Translation:**
 - **ALL** web requests go to `api/app.py`
-- Use **Python** to run it
+- Vercel automatically detects **Python** runtime from the `api/` directory
+- Function is configured with 1GB memory and 10-second timeout
 - Don't use Node.js, don't use index.js
 
 ---

@@ -216,12 +216,18 @@ python ingest.py
 
 ## 🌐 Deployment
 
-### Vercel Deployment
+### Vercel Deployment (Recommended)
+
+**📘 For complete step-by-step deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md)**
+
+This project is optimized for deployment on Vercel using **FastAPI (Python)**. The `index.js` (Express/Node.js) file is an alternative local option and is **NOT used for Vercel deployment**.
+
+#### Quick Deployment Steps:
 
 1. **Push to GitHub**
-```bash
-git push origin main
-```
+   ```bash
+   git push origin main
+   ```
 
 2. **Import to Vercel**
    - Go to [Vercel Dashboard](https://vercel.com/dashboard)
@@ -229,13 +235,22 @@ git push origin main
    - Select your GitHub repository
 
 3. **Configure Environment Variables**
-   Add all variables from `.env` to Vercel:
-   - Settings → Environment Variables
-   - Add: `GROQ_API_KEY`, `SUPABASE_URL`, `SUPABASE_KEY`, etc.
+   Add all required variables in Vercel Settings → Environment Variables:
+   - `GROQ_API_KEY` (required)
+   - `SUPABASE_URL` (required)
+   - `SUPABASE_KEY` (required)
+   - `ADMIN_USERNAME` (required)
+   - `ADMIN_PASSWORD` (required)
+   - `RECAPTCHA_SECRET_KEY` (optional)
 
 4. **Deploy**
    - Vercel will automatically deploy using `vercel.json` configuration
    - Access at: `https://your-project.vercel.app`
+
+**⚠️ Important:** 
+- You do NOT need to configure Node.js separately for Vercel
+- The deployment uses only Python FastAPI (`api/app.py`)
+- See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed troubleshooting
 
 ## 🔌 API Endpoints
 

@@ -2,6 +2,12 @@
 
 An intelligent AI-powered customer support chatbot for ZT Hosting services, built with FastAPI, LangChain, and Groq LLM.
 
+## 🚀 Quick Links
+
+- **New to deployment?** → [10-Minute Quick Start](QUICKSTART.md)
+- **Detailed deployment guide** → [Complete Deployment Guide](DEPLOYMENT.md)
+- **Step-by-step checklist** → [Deployment Checklist](DEPLOYMENT_CHECKLIST.md)
+
 ## 📋 Overview
 
 ZT Hosting Chatbot is a professional customer support solution that provides instant, accurate answers to hosting-related questions. It combines:

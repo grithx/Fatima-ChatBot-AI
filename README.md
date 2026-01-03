@@ -2,6 +2,17 @@
 
 An intelligent AI-powered customer support chatbot for ZT Hosting services, built with FastAPI, LangChain, and Groq LLM.
 
+## 🚀 Quick Links
+
+**📚 [Complete Documentation Index](DOCUMENTATION_INDEX.md) - Find the right guide for you**
+
+- **❓ Confused about deployment?** → [Deployment FAQ](DEPLOYMENT_FAQ.md) - Answers common questions
+- **⚡ New to deployment?** → [10-Minute Quick Start](QUICKSTART.md) - Fastest way to deploy
+- **📊 Visual learner?** → [Deployment Architecture](DEPLOYMENT_ARCHITECTURE.md) - Diagrams and flowcharts
+- **📚 Detailed deployment guide** → [Complete Deployment Guide](DEPLOYMENT.md) - Comprehensive instructions
+- **📋 Step-by-step checklist** → [Deployment Checklist](DEPLOYMENT_CHECKLIST.md) - Track your progress
+- **🔧 Having errors?** → [Troubleshooting Guide](TROUBLESHOOTING.md) - Fix common issues
+
 ## 📋 Overview
 
 ZT Hosting Chatbot is a professional customer support solution that provides instant, accurate answers to hosting-related questions. It combines:
@@ -216,12 +227,18 @@ python ingest.py
 
 ## 🌐 Deployment
 
-### Vercel Deployment
+### Vercel Deployment (Recommended)
+
+**📘 For complete step-by-step deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md)**
+
+This project is optimized for deployment on Vercel using **FastAPI (Python)**. The `index.js` (Express/Node.js) file is an alternative local option and is **NOT used for Vercel deployment**.
+
+#### Quick Deployment Steps:
 
 1. **Push to GitHub**
-```bash
-git push origin main
-```
+   ```bash
+   git push origin main
+   ```
 
 2. **Import to Vercel**
    - Go to [Vercel Dashboard](https://vercel.com/dashboard)
@@ -229,13 +246,22 @@ git push origin main
    - Select your GitHub repository
 
 3. **Configure Environment Variables**
-   Add all variables from `.env` to Vercel:
-   - Settings → Environment Variables
-   - Add: `GROQ_API_KEY`, `SUPABASE_URL`, `SUPABASE_KEY`, etc.
+   Add all required variables in Vercel Settings → Environment Variables:
+   - `GROQ_API_KEY` (required)
+   - `SUPABASE_URL` (required)
+   - `SUPABASE_KEY` (required)
+   - `ADMIN_USERNAME` (required)
+   - `ADMIN_PASSWORD` (required)
+   - `RECAPTCHA_SECRET_KEY` (optional)
 
 4. **Deploy**
    - Vercel will automatically deploy using `vercel.json` configuration
    - Access at: `https://your-project.vercel.app`
+
+**⚠️ Important:** 
+- You do NOT need to configure Node.js separately for Vercel
+- The deployment uses only Python FastAPI (`api/app.py`)
+- See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed troubleshooting
 
 ## 🔌 API Endpoints
 

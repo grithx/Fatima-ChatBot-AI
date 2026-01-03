@@ -6,7 +6,13 @@ import re
 from typing import Dict, Any
 from langchain_core.output_parsers import BaseOutputParser
 from pydantic import Field
-from response_formatter import ResponseFormatter
+
+try:
+    # Try relative imports first (for Vercel serverless)
+    from .response_formatter import ResponseFormatter
+except ImportError:
+    # Fallback to absolute imports (for local development)
+    from response_formatter import ResponseFormatter
 
 
 class FormattedOutputParser(BaseOutputParser[Dict[str, Any]]):

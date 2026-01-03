@@ -55,22 +55,30 @@ The Node.js files (`index.js`, `package.json`) are:
 
 ### Q3: What does the `vercel.json` do?
 
-**A:** It tells Vercel:
+**A:** It tells Vercel how to configure and route requests:
 ```json
 {
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/app.py",     // Use this Python file
-      "use": "@vercel/python"   // Use Python runtime (not Node.js)
+      "source": "/(.*)",           // All requests
+      "destination": "api/app.py"  // Go to this Python file
     }
-  ]
+  ],
+  "functions": {
+    "api/app.py": {
+      "memory": 1024,              // 1GB memory for the function
+      "maxDuration": 10            // 10 second timeout
+    }
+  }
 }
 ```
 
 This means Vercel will:
-1. Ignore `index.js` and `package.json`
-2. Use Python to run your application
-3. Install Python dependencies from `requirements.txt`
+1. Automatically detect Python runtime from the `api/` directory structure
+2. Ignore `index.js` and `package.json`
+3. Use Python to run your application
+4. Install Python dependencies from `requirements.txt`
+5. Configure the function with specific memory and timeout settings
 
 ### Q4: Can I delete the Node.js files?
 

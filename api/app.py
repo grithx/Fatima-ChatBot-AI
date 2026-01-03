@@ -2801,8 +2801,28 @@ ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 RECAPTCHA_SECRET_KEY = os.environ.get("RECAPTCHA_SECRET_KEY")
 
-# Clients Setup
-supabase: Client = create_client(os.environ.get("SUPABASE_URL", ""), os.environ.get("SUPABASE_KEY", ""))
+# Clients Setup - Lazy initialization to prevent startup crashes
+_supabase_client = None
+
+def get_supabase() -> Client:
+    """
+    Lazy initialization of Supabase client.
+    Returns None if environment variables are not configured.
+    """
+    global _supabase_client
+    if _supabase_client is None:
+        supabase_url = os.environ.get("SUPABASE_URL", "")
+        supabase_key = os.environ.get("SUPABASE_KEY", "")
+        if supabase_url and supabase_key:
+            try:
+                _supabase_client = create_client(supabase_url, supabase_key)
+            except Exception as e:
+                print(f"Warning: Failed to initialize Supabase client: {e}")
+                return None
+        else:
+            print("Warning: SUPABASE_URL or SUPABASE_KEY not configured")
+            return None
+    return _supabase_client
 
 def get_llm():
     return ChatGroq(
@@ -2828,6 +2848,18 @@ async def debug_paths():
             "index": HTML_PATH.exists(),
             "admin": ADMIN_HTML_PATH.exists()
         }
+    }
+
+# --- Health Check Route ---
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for deployment verification"""
+    supabase = get_supabase()
+    return {
+        "status": "ok",
+        "database": "connected" if supabase else "not_configured",
+        "groq_api": "configured" if os.environ.get("GROQ_API_KEY") else "not_configured",
+        "data_files": DATA_PATH.exists()
     }
 
 # # --- AI & Main Routes ---
@@ -2940,15 +2972,22 @@ async def ask_bot(request: Request):
             return {"answer": "Aapka sawal kya hai?"}
 
         # --- LOAD BOT SETTINGS ---
+        supabase = get_supabase()
         try:
-            settings_res = supabase.table("bot_settings").select("*").limit(1).execute()
-            if settings_res.data and len(settings_res.data) > 0:
-                settings = settings_res.data[0]
-                response_style = settings.get("response_style", "short")
-                priority = settings.get("priority", "database_first")
-                context_size = settings.get("context_size", 4000)
+            if supabase:
+                settings_res = supabase.table("bot_settings").select("*").limit(1).execute()
+                if settings_res.data and len(settings_res.data) > 0:
+                    settings = settings_res.data[0]
+                    response_style = settings.get("response_style", "short")
+                    priority = settings.get("priority", "database_first")
+                    context_size = settings.get("context_size", 4000)
+                else:
+                    # Defaults
+                    response_style = "short"
+                    priority = "database_first"
+                    context_size = 4000
             else:
-                # Defaults
+                # Defaults if Supabase not configured
                 response_style = "short"
                 priority = "database_first"
                 context_size = 4000
@@ -2959,10 +2998,15 @@ async def ask_bot(request: Request):
             context_size = 4000
 
         # --- STEP 1: DATABASE CHECK ---
-        db_res = supabase.table("manual_faqs").select("question, answer").execute()
+        db_res = None
         db_context = ""  # Initialize db_context
+        if supabase:
+            try:
+                db_res = supabase.table("manual_faqs").select("question, answer").execute()
+            except:
+                db_res = None
         
-        if priority == "database_first":
+        if priority == "database_first" and db_res and db_res.data:
             # Strict database priority - return immediately on match
             for row in db_res.data:
                 if row['question'].lower() in user_input:
@@ -2977,7 +3021,7 @@ async def ask_bot(request: Request):
                             "source": "database"
                         }
                     }
-        else:
+        elif db_res and db_res.data:
             # AI supplement mode - collect DB context but don't return yet
             for row in db_res.data:
                 if row['question'].lower() in user_input:
@@ -3130,6 +3174,9 @@ async def add_faq(request: Request):
         return {"status": "error", "message": "Answer too long (max 5000 characters)"}
     
     try:
+        supabase = get_supabase()
+        if not supabase:
+            return {"status": "error", "message": "Database not configured"}
         supabase.table("manual_faqs").insert({"question": question.lower(), "answer": answer}).execute()
         return {"status": "success"}
     except Exception as e:
@@ -3139,6 +3186,9 @@ async def add_faq(request: Request):
 async def get_faqs(request: Request):
     if not check_auth(request): return {"status": "error", "message": "Unauthorized"}
     try:
+        supabase = get_supabase()
+        if not supabase:
+            return {"status": "error", "message": "Database not configured"}
         response = supabase.table("manual_faqs").select("*").order("id", desc=True).execute()
         return {"status": "success", "faqs": response.data}
     except Exception as e:
@@ -3167,6 +3217,9 @@ async def update_faq(request: Request):
         return {"status": "error", "message": "Answer too long (max 5000 characters)"}
     
     try:
+        supabase = get_supabase()
+        if not supabase:
+            return {"status": "error", "message": "Database not configured"}
         supabase.table("manual_faqs").update({
             "question": question.lower(),
             "answer": answer
@@ -3187,6 +3240,9 @@ async def delete_faq(request: Request):
         return {"status": "error", "message": "Invalid FAQ ID"}
     
     try:
+        supabase = get_supabase()
+        if not supabase:
+            return {"status": "error", "message": "Database not configured"}
         supabase.table("manual_faqs").delete().eq("id", faq_id).execute()
         return {"status": "success"}
     except Exception as e:
@@ -3196,6 +3252,17 @@ async def delete_faq(request: Request):
 async def get_settings(request: Request):
     if not check_auth(request): return {"status": "error", "message": "Unauthorized"}
     try:
+        supabase = get_supabase()
+        if not supabase:
+            # Return defaults if Supabase not configured
+            return {
+                "status": "success",
+                "settings": {
+                    "response_style": "short",
+                    "priority": "database_first",
+                    "context_size": 4000
+                }
+            }
         response = supabase.table("bot_settings").select("*").limit(1).execute()
         if response.data and len(response.data) > 0:
             return {"status": "success", "settings": response.data[0]}
@@ -3243,6 +3310,9 @@ async def save_settings(request: Request):
         return {"status": "error", "message": "Invalid context_size"}
     
     try:
+        supabase = get_supabase()
+        if not supabase:
+            return {"status": "error", "message": "Database not configured"}
         # Check if settings exist
         existing = supabase.table("bot_settings").select("*").limit(1).execute()
         

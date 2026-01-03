@@ -1,4 +1,5 @@
 import os 
+import logging
 from pathlib import Path
 from fastapi import FastAPI, Request, Form
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,6 +8,11 @@ import requests
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from supabase import create_client, Client
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 try:
     # Try relative imports first (for Vercel serverless)
     from response_formatter import ResponseFormatter
@@ -57,10 +63,10 @@ def get_supabase() -> Client:
             try:
                 _supabase_client = create_client(supabase_url, supabase_key)
             except Exception as e:
-                print(f"Warning: Failed to initialize Supabase client: {e}")
+                logger.warning(f"Failed to initialize Supabase client: {e}")
                 return None
         else:
-            print("Warning: SUPABASE_URL or SUPABASE_KEY not configured")
+            logger.info("SUPABASE_URL or SUPABASE_KEY not configured - database features disabled")
             return None
     return _supabase_client
 
@@ -71,7 +77,10 @@ def get_llm():
     """
     groq_api_key = os.environ.get("GROQ_API_KEY")
     if not groq_api_key:
-        raise ValueError("GROQ_API_KEY environment variable is not configured")
+        raise ValueError(
+            "GROQ_API_KEY environment variable is not configured. "
+            "Please set GROQ_API_KEY in your Vercel environment variables."
+        )
     
     return ChatGroq(
         groq_api_key=groq_api_key, 
@@ -281,7 +290,7 @@ async def ask_bot(request: Request):
         if "429" in str(e):
             return {"answer": "System is busy. Please try again in a few minutes."}
         # Log error for debugging (will appear in Vercel logs)
-        print(f"Error in /ask endpoint: {str(e)}")
+        logger.error(f"Error in /ask endpoint: {str(e)}", exc_info=True)
         return {"answer": "I apologize, but I'm having trouble processing your request. Please try again."}
 
 

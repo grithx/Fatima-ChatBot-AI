@@ -2773,8 +2773,14 @@ import requests
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from supabase import create_client, Client
-from response_formatter import ResponseFormatter
-from output_parser import FormattedOutputParser
+try:
+    # Try relative imports first (for Vercel serverless)
+    from .response_formatter import ResponseFormatter
+    from .output_parser import FormattedOutputParser
+except ImportError:
+    # Fallback to absolute imports (for local development)
+    from response_formatter import ResponseFormatter
+    from output_parser import FormattedOutputParser
 
 app = FastAPI()
 
@@ -2825,8 +2831,16 @@ def get_supabase() -> Client:
     return _supabase_client
 
 def get_llm():
+    """
+    Get ChatGroq LLM instance.
+    Raises ValueError if GROQ_API_KEY is not configured.
+    """
+    groq_api_key = os.environ.get("GROQ_API_KEY")
+    if not groq_api_key:
+        raise ValueError("GROQ_API_KEY environment variable is not configured")
+    
     return ChatGroq(
-        groq_api_key=os.environ.get("GROQ_API_KEY"), 
+        groq_api_key=groq_api_key, 
         # Updated to a currently supported model
         model_name="llama-3.1-8b-instant", 
         temperature=0.1 
@@ -3120,11 +3134,20 @@ async def ask_bot(request: Request):
             }
         }
 
+    except ValueError as ve:
+        # Handle missing API keys
+        if "GROQ_API_KEY" in str(ve):
+            return {"answer": "Service configuration error. Please contact the administrator."}
+        return {"answer": f"Configuration Error: {str(ve)}"}
     except Exception as e:
         # Code 413 or 429 management
         if "413" in str(e) or "limit" in str(e).lower():
             return {"answer": "The request is too large or system is busy. Please try asking a shorter question."}
-        return {"answer": f"System Error: {str(e)}"}
+        if "429" in str(e):
+            return {"answer": "System is busy. Please try again in a few minutes."}
+        # Log error for debugging (will appear in Vercel logs)
+        print(f"Error in /ask endpoint: {str(e)}")
+        return {"answer": "I apologize, but I'm having trouble processing your request. Please try again."}
 
 
 # --- Routes for UI (Baqi routes same rahenge) ---

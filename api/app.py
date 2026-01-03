@@ -2807,7 +2807,7 @@ _supabase_client = None
 def get_supabase() -> Client:
     """
     Lazy initialization of Supabase client.
-    Returns None if environment variables are not configured.
+    Returns None if environment variables are not configured or if initialization fails.
     """
     global _supabase_client
     if _supabase_client is None:
@@ -3003,7 +3003,7 @@ async def ask_bot(request: Request):
         if supabase:
             try:
                 db_res = supabase.table("manual_faqs").select("question, answer").execute()
-            except:
+            except Exception:
                 db_res = None
         
         if priority == "database_first" and db_res and db_res.data:
